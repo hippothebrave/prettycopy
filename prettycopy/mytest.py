@@ -1,44 +1,37 @@
 import pyperclip
 import sys #sys.argv[0] is mytest.py, etc
 import re
-import requests
 import gdocs
 from googleapiclient.errors import HttpError
 
-# testing function
-def tester():
-    text = pyperclip.paste()
-    text = "The text:" + text.upper()
-    pyperclip.copy(text)
-    return text
-
-# remove all newlines
 def nonewlines():
+    """Remove all newlines."""
     text = pyperclip.paste()
     text = ''.join(text.splitlines())
     pyperclip.copy(text)
     return text
 
-# take out old newlines; replace bullets with newlines
 def nobullets():
+    """Take out old newlines, replace bullets with newlines."""
     text = pyperclip.paste()
-    text = ''.join([line.lstrip() for line in text.splitlines()])
+    text = nonewlines().lstrip("• ")
     text = re.sub("•\s*", "\n", text)
     pyperclip.copy(text)
     return text
 
-# remove newlines, replace bullets with spaces
 def bullettopar():
+    """Remove newlines, replace bullets with spaces """
     text = pyperclip.paste()
     text = ' '.join([re.sub("•\s*", " ", line).strip() for line in text.splitlines()])
     pyperclip.copy(text)
     return text
 
-# remove bullet symbols, turn into bulleted list
 # FIXME: only works if you have the document ID
+# FIXME: only pastes at end of document
 def betterbullets(docID):
+    """Add clipboard comment to end of Google Doc as a bulleted list."""
     # get content
-    text = "\n" + nobullets()
+    text = nobullets()
 
     # authenticate so that you can access the google doc
     service = gdocs.getservice()
@@ -107,6 +100,7 @@ def betterbullets(docID):
     return text
 
 def quote(end_punctuation=False):
+    """Add quotes (and optional comma) around clipboard contents."""
     if(end_punctuation):
         text = '"' + pyperclip.paste() + ',"'
     else:
@@ -116,8 +110,6 @@ def quote(end_punctuation=False):
 
 if __name__ == "__main__":
     match sys.argv[1]:
-        case 'test':
-            print(tester())
         case 'nonewlines':
             print(nonewlines())
         case 'nobullets':
