@@ -1,14 +1,15 @@
 # getservice(): Authorize access to Google Docs
-# main(): Get content from a Google Doc--(1) in JSON form, (2) in text form 
+# main(): Get content from a Google Doc--(1) in JSON form, (2) in text form
 # CITATION: Google Docs API quickstart
 
-from __future__ import print_function #not sure what this does
+from __future__ import print_function  # not sure what this does
 
 import os.path
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
+
 # from googleapiclient.discovery import build
 import googleapiclient.discovery
 from googleapiclient.errors import HttpError
@@ -23,12 +24,12 @@ SCOPES = ['https://www.googleapis.com/auth/documents']
 # The ID of a sample document.
 DOCUMENT_ID = '1yxH3v4zi82pEMKW41MbZRqKz8JXRbhrb5yJnEdSfJC0'
 
+
 # Authorizes the user to access Google Docs
 # TODO: add SCOPES as an optional variable, delete token.json if it is being changed
 # CITATION: Google Docs API quickstart
 def getservice():
-    """Credentials testing
-    """
+    """Credentials testing"""
     creds = None
 
     # The file token.json stores the user's access and refresh tokens.
@@ -40,19 +41,18 @@ def getservice():
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            flow = InstalledAppFlow.from_client_secrets_file(
-                '../credentials.json', SCOPES)
+            flow = InstalledAppFlow.from_client_secrets_file('../credentials.json', SCOPES)
             creds = flow.run_local_server(port=0)
         # Save the credentials for the next run
         with open('../token.json', 'w') as token:
             token.write(creds.to_json())
-    
+
     # Create + return "service", which you can use to access the Docs API
     try:
         service = googleapiclient.discovery.build('docs', 'v1', credentials=creds)
     except HttpError as err:
         print(err)
-    
+
     return service
 
 
