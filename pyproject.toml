@@ -16,7 +16,11 @@ requires-python = ">=3.7"
 
 dependencies = [
     "pyperclip",
-    "google"
+    "google.auth.transport.requests",
+    "google.oauth2.credentials",
+    "google_auth_oauthlib.flow",
+    "googleapiclient.discovery",
+    "googleapiclient.errors"
 ]
 
 classifiers = [
