@@ -1,16 +1,5 @@
-# from prettycopy.hello import hello, print_hello #prev "from example_project_python"
-# def test_hello():
-#     assert hello() == "Hello, world!"
-
-# @patch('builtins.print')
-# def test_print_hello(mock_print):
-#     print_hello()
-#     assert mock_print.call_args.args == ("Hello, world!",)
-
-import pyperclip
-from prettycopy.mytest import nonewlines, nobullets, bullettopar, quote, betterbullets
+from prettycopy.mytest import nonewlines, nobullets, bullettopar, quote
 from prettycopy.gdocs import getservice, SCOPES
-import os
 from unittest.mock import patch, MagicMock
 
 
@@ -29,21 +18,21 @@ def test_nobullets():
         paste_mock.return_value = "•Test\n•Test"
         newline_mock.return_value = "•Test•Test"
         ret = nobullets()
-        assert newline_mock.call_args == None
+        assert newline_mock.call_args == None  # noqa: E711
         assert ret == "Test\nTest"
         assert copy_mock.call_args.args == (ret,)
 
         paste_mock.return_value = "• Test\n• Test"
         newline_mock.return_value = "• Test• Test"
         ret = nobullets()
-        assert newline_mock.call_args == None
+        assert newline_mock.call_args == None  # noqa: E711
         assert ret == "Test\nTest"
         assert copy_mock.call_args.args == (ret,)
 
         paste_mock.return_value = "•   Te•st• Test"
         newline_mock.return_value = "•   Te•st• Test"
         ret = nobullets()
-        assert newline_mock.call_args == None
+        assert newline_mock.call_args == None  # noqa: E711
         assert ret == "Te\nst\nTest"
         assert copy_mock.call_args.args == (ret,)
 

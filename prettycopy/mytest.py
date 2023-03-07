@@ -1,5 +1,4 @@
 import pyperclip
-import sys  # sys.argv[0] is mytest.py, etc
 import re
 import gdocs
 from googleapiclient.errors import HttpError
@@ -17,7 +16,7 @@ def nobullets():
     """Take out old newlines, replace bullets with newlines."""
     text = pyperclip.paste()
     text = nonewlines().lstrip("• ")
-    text = re.sub("•\s*", "\n", text)
+    text = re.sub(r"•\s*", "\n", text)
     pyperclip.copy(text)
     return text
 
@@ -25,7 +24,7 @@ def nobullets():
 def bullettopar():
     """Remove newlines, replace bullets with spaces"""
     text = pyperclip.paste()
-    text = ' '.join([re.sub("•\s*", " ", line).strip() for line in text.splitlines()])
+    text = ' '.join([re.sub(r"•\s*", " ", line).strip() for line in text.splitlines()])
     pyperclip.copy(text)
     return text
 
@@ -83,7 +82,7 @@ def betterbullets(docID):
 
     request = service.documents().batchUpdate(documentId=docID, body=payload)
     try:
-        response = request.execute()
+        response = request.execute()  # noqa: F841
     except HttpError as e:
         print('Error response status code : {0}, reason : {1}'.format(e.status_code, e.error_details))
 
@@ -101,18 +100,18 @@ def quote(end_punctuation=False):
     return text
 
 
-if __name__ == "__main__":
-    match sys.argv[1]:
-        case 'nonewlines':
-            print(nonewlines())
-        case 'nobullets':
-            print(nobullets())
-        case 'bullettopar':
-            print(bullettopar())
-        case 'betterbullets':
-            print(betterbullets(sys.argv[2]))
-        case 'quote':
-            print(quote(True))
-        case 'endquote':
-            print(quote())
-    print("You did it!")
+# if __name__ == "__main__":
+#     match sys.argv[1]:
+#         case 'nonewlines':
+#             print(nonewlines())
+#         case 'nobullets':
+#             print(nobullets())
+#         case 'bullettopar':
+#             print(bullettopar())
+#         case 'betterbullets':
+#             print(betterbullets(sys.argv[2]))
+#         case 'quote':
+#             print(quote(True))
+#         case 'endquote':
+#             print(quote())
+#     print("You did it!")

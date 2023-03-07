@@ -27,7 +27,7 @@ format:  ## run autoformatting with black
 fix: format
 
 check:  ## check assets for packaging
-	check-manifest -v
+	python -m check_manifest -v
 
 # Alias
 checks: check

@@ -14,9 +14,12 @@ readme = "README.md"
 version = "0.0.1"
 requires-python = ">=3.7"
 
-dependencies = ["pyperclip", "sys", "re", "googleapiclient.errors",
-"os", "google.auth.transport.requests", "google.oauth2.credentials",
-"google_auth_oauthlib.flow", "googleapiclient.discovery"]
+dependencies = [
+    "pyperclip",
+    "google-auth-oauthlib",
+    "google-auth",
+    "google-api-python-client",
+]
 
 classifiers = [
     "Development Status :: 2 - Pre-Alpha",

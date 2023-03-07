@@ -1,7 +1,8 @@
-graft example_project_python
+graft prettycopy
 
 include LICENSE
 include README.md
+include CONTRIBUTING.md
 
 include .bumpversion.cfg
 include pyproject.toml
@@ -13,7 +14,7 @@ exclude .gitattributes
 
 # Patterns to exclude from any directory
 global-exclude *~
-global-exclude *.pyc
+global-exclude *.pyc*
 global-exclude *.pyo
 global-exclude .git
 global-exclude .ipynb_checkpoints
