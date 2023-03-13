@@ -4,31 +4,38 @@ import gdocs
 from googleapiclient.errors import HttpError
 
 
-def nonewlines():
+@staticmethod
+def nonewlines(text=None):
     """Remove all newlines."""
-    text = pyperclip.paste()
+    if text is None:
+        text = pyperclip.paste()
     text = ''.join(text.splitlines())
     pyperclip.copy(text)
     return text
 
 
-def nobullets():
+@staticmethod
+def nobullets(text=None):
     """Take out old newlines, replace bullets with newlines."""
-    text = pyperclip.paste()
+    if text is None:
+        text = pyperclip.paste()
     text = nonewlines().lstrip("• ")
     text = re.sub(r"•\s*", "\n", text)
     pyperclip.copy(text)
     return text
 
 
-def bullettopar():
+@staticmethod
+def bullettopar(text=None):
     """Remove newlines, replace bullets with spaces"""
-    text = pyperclip.paste()
+    if text is None:
+        text = pyperclip.paste()
     text = ' '.join([re.sub(r"•\s*", " ", line).strip() for line in text.splitlines()])
     pyperclip.copy(text)
     return text
 
 
+@staticmethod
 # FIXME: only works if you have the document ID
 # FIXME: only pastes at end of document
 def betterbullets(docID):
@@ -90,28 +97,31 @@ def betterbullets(docID):
     return text
 
 
-def quote(end_punctuation=False):
-    """Add quotes (and optional comma) around clipboard contents."""
-    if end_punctuation:
-        text = '"' + pyperclip.paste() + ',"'
-    else:
-        text = '"' + pyperclip.paste() + '"'
+@staticmethod
+def simplequote(text=None):
+    """Add quotes around clipboard contents."""
+    if text is None:
+        text = pyperclip.paste()
+    text = '"' + text + '"'
     pyperclip.copy(text)
     return text
 
 
-# if __name__ == "__main__":
-#     match sys.argv[1]:
-#         case 'nonewlines':
-#             print(nonewlines())
-#         case 'nobullets':
-#             print(nobullets())
-#         case 'bullettopar':
-#             print(bullettopar())
-#         case 'betterbullets':
-#             print(betterbullets(sys.argv[2]))
-#         case 'quote':
-#             print(quote(True))
-#         case 'endquote':
-#             print(quote())
-#     print("You did it!")
+@staticmethod
+def quote(end_punctuation=None, text=None):
+    """Add quotes (and optional comma) around clipboard contents."""
+    if text is None:
+        text = pyperclip.paste()
+    if end_punctuation is not None:
+        if len(end_punctuation) != 1:
+            raise ValueError("End punctuation should be a single character.")
+        elif end_punctuation not in [',', '.', '!', '?']:
+            raise ValueError("End punctuation should be one of: [.,!?]")
+        text = '"' + text + end_punctuation + '"'
+    else:
+        text = '"' + text + ',"'
+    pyperclip.copy(text)
+    return text
+
+
+# TODO: turn excess newlines into only one

@@ -1,5 +1,5 @@
 # prettycopy
-A library for clean, format-friendly copy-pasting.
+A beginner-friendly library for clean, format-friendly copy-pasting.
 
 [![License](https://img.shields.io/github/license/hippothebrave/prettycopy)](https://github.com/hippothebrave/prettycopy)
 [![GitHub issues](https://img.shields.io/github/issues/hippothebrave/prettycopy)](https://github.com/hippothebrave/prettycopy/issues)
@@ -8,4 +8,44 @@ A library for clean, format-friendly copy-pasting.
 
 
 ## Overview
-When you copy and paste text, there can be issues due to the formatting of the copied text: unnecessary line breaks, bullet point symbols that don't translate into bullet-pointed lists, and so on. Once implemented, this library will help you clean up the text on your clipboard before you paste it.
+Copying and pasting text is one of the most commonly-used functionalities we have on our computers. But sometimes, there are formatting issues in the text you're copying that a simple 'paste without formatting' can't fix.
+
+Enter prettycopy.
+
+PrettyCopy will help you clean up the text on your clipboard *before* you paste it. 
+
+### Installation
+
+Just run:
+
+```bash
+pip install prettycopy
+```
+
+### Usage
+
+Copy a piece of text. Run a PrettyCopy function (`prettycopy.your_function()`). Now, when you paste, the text will already by corrected! That's all!
+
+For added flexibility:
+
+You can enter the text as an argument to the function (`prettycopy.your_function(your_text)`), and PrettyCopy will automatically copy the corrected text to your clipboard. Plus, PrettyCopy functions return the corrected text as a string (`corrected_text = prettycopy.your_function()`).
+
+### Functions
+Current functions:
+
+`prettycopy.nonewlines(optional_text)`: Removes all line breaks from the text.
+
+`prettycopy.nobullets(optional_text)`: Removes all bullet symbols (•) and replaces them with line breaks.
+
+`prettycopy.bullettopar(optional_text)`: Removes all line breaks and bullet symbols (•) and replaces them with spaces, returning a single paragraph.
+
+`prettycopy.simplequote(optional_text)`: Adds quotation marks around the text.
+
+`prettycopy.quote(optional_end_punctuation, optional_text)`: Adds quotation marks around the text, ending in a punctuation mark. The default is a comma.
+
+> Example: *this is a test* --> prettycopy.quote() --> *"this is a test,"*
+> Example: *this is a test* --> prettycopy.quote('!') --> *"this is a test!"*
+
+### Future Functions
+
+`prettycopy.betterbullets(docID)`: If you enter the document ID of an editable Google Doc (the long string of letters and numbers in the URL), this function will copy the text in your clipboard to the end of the document, replacing all bullet symbols (•) with correctly-formatted bullet points. Still under construction.
