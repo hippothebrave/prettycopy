@@ -12,11 +12,11 @@ Copying and pasting text is one of the most commonly-used functionalities we hav
 
 Enter prettycopy.
 
-PrettyCopy will help you clean up the text on your clipboard *before* you paste it. 
+PrettyCopy will help you clean up the text on your clipboard *before* you paste it. Just copy text, run a PrettyCopy function, and you'll be able to paste it with corrections already in place!
 
 ### Installation
 
-Just run:
+If you already have Python, just run:
 
 ```bash
 pip install prettycopy
@@ -24,14 +24,13 @@ pip install prettycopy
 
 ### Usage
 
-Copy a piece of text. Run a PrettyCopy function (`prettycopy.your_function()`). Now, when you paste, the text will already by corrected! That's all!
+Copy a piece of text. Run a PrettyCopy function. Now, when you paste, the text will already by corrected. That's all!
 
 For added flexibility:
 
-You can enter the text as an argument to the function (`prettycopy.your_function(your_text)`), and PrettyCopy will automatically copy the corrected text to your clipboard. Plus, PrettyCopy functions return the corrected text as a string (`corrected_text = prettycopy.your_function()`).
+You can enter the text as an argument to the function, and PrettyCopy will automatically copy the corrected text to your clipboard. Plus, if you're using PrettyCopy functions through code, the functions return the corrected text as a string.
 
 ### Functions
-Current functions:
 
 `prettycopy.nonewlines(optional_text)`: Removes all line breaks from the text.
 
@@ -44,6 +43,7 @@ Current functions:
 `prettycopy.quote(optional_end_punctuation, optional_text)`: Adds quotation marks around the text, ending in a punctuation mark. The default is a comma.
 
 > Example: *this is a test* --> prettycopy.quote() --> *"this is a test,"*
+
 > Example: *this is a test* --> prettycopy.quote('!') --> *"this is a test!"*
 
 ### Future Functions
