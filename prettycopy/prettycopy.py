@@ -4,7 +4,6 @@ import gdocs
 from googleapiclient.errors import HttpError
 
 
-@staticmethod
 def nonewlines(text=None):
     """Remove all newlines."""
     if text is None:
@@ -14,7 +13,6 @@ def nonewlines(text=None):
     return text
 
 
-@staticmethod
 def nobullets(text=None):
     """Take out old newlines, replace bullets with newlines."""
     if text is None:
@@ -25,7 +23,6 @@ def nobullets(text=None):
     return text
 
 
-@staticmethod
 def bullettopar(text=None):
     """Remove newlines, replace bullets with spaces"""
     if text is None:
@@ -35,7 +32,6 @@ def bullettopar(text=None):
     return text
 
 
-@staticmethod
 # FIXME: only works if you have the document ID
 # FIXME: only pastes at end of document
 def betterbullets(docID):
@@ -97,7 +93,6 @@ def betterbullets(docID):
     return text
 
 
-@staticmethod
 def simplequote(text=None):
     """Add quotes around clipboard contents."""
     if text is None:
@@ -107,7 +102,6 @@ def simplequote(text=None):
     return text
 
 
-@staticmethod
 def quote(end_punctuation=None, text=None):
     """Add quotes (and optional comma) around clipboard contents."""
     if text is None:
