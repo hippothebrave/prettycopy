@@ -5,7 +5,21 @@ from googleapiclient.errors import HttpError
 
 
 def nonewlines(text=None):
-    """Remove all newlines."""
+    """Remove all newlines.
+
+    Takes in a text input from the argument or (by default) the clipboard, removes all newlines, 
+    and recopies it to the clipboard.
+
+    Args:
+        text (str): Any text; optional, default None.
+    
+    Returns:
+        str: Corrected text.
+    
+    Warning:
+        Changes contents of the clipboard.
+        
+    """
     if text is None:
         text = pyperclip.paste()
     text = ''.join(text.splitlines())
@@ -14,7 +28,21 @@ def nonewlines(text=None):
 
 
 def nobullets(text=None):
-    """Take out old newlines, replace bullets with newlines."""
+    """Take out old newlines, replace bullets with newlines.
+    
+    Takes in a text input from the argument or (by default) the clipboard. Removes all newlines,
+    and replaces any bullet symbols with newlines.
+
+    Args:
+        text (str): Any text; optional, default None.
+    
+    Returns:
+        str: Corrected text.
+    
+    Warning:
+        Changes contents of the clipboard.
+    
+    """
     if text is None:
         text = pyperclip.paste()
     text = nonewlines().lstrip("• ")
@@ -24,7 +52,21 @@ def nobullets(text=None):
 
 
 def bullettopar(text=None):
-    """Remove newlines, replace bullets with spaces"""
+    """Remove newlines, replace bullets with spaces
+
+    Takes in a text input from the argument or (by default) the clipboard. Removes all newlines,
+    and replaces any bullet symbols with a space.
+
+    Args:
+        text (str): Any text; optional, default None.
+    
+    Returns:
+        str: Corrected text.
+        
+    Warning:
+        Changes contents of the clipboard.
+    
+    """
     if text is None:
         text = pyperclip.paste()
     text = ' '.join([re.sub(r"•\s*", " ", line).strip() for line in text.splitlines()])
@@ -35,7 +77,18 @@ def bullettopar(text=None):
 # FIXME: only works if you have the document ID
 # FIXME: only pastes at end of document
 def betterbullets(docID):
-    """Add clipboard comment to end of Google Doc as a bulleted list."""
+    """Add clipboard content to end of Google Doc as a bulleted list.
+    
+    Takes text from the clipboard. Removes all newlines and replaces bullet symbols with newlines.
+    Copies the text to the end of a Google Doc as a bulleted list.
+
+    Args:
+        docID (str): The ID of a Google Doc.
+    
+    Returns:
+        str: Corrected text.
+    
+    """
     # get content
     text = nobullets()
 
@@ -94,7 +147,20 @@ def betterbullets(docID):
 
 
 def simplequote(text=None):
-    """Add quotes around clipboard contents."""
+    """Add quotes around clipboard contents.
+
+    Adds quotation marks around a text input from the argument or (by default) the clipboard.
+
+    Args:
+        text (str): Any text; optional, default None.
+    
+    Returns:
+        str: Corrected text.
+    
+    Warning:
+        Changes contents of the clipboard.
+    
+    """
     if text is None:
         text = pyperclip.paste()
     text = '"' + text + '"'
@@ -103,7 +169,21 @@ def simplequote(text=None):
 
 
 def quote(end_punctuation=None, text=None):
-    """Add quotes (and optional comma) around clipboard contents."""
+    """Add quotes (and optional comma) around clipboard contents.
+
+    Adds quotation marks and end punctuation to a text input from the argument or (by default) the clipboard.
+
+    Args:
+        end_punctuation (str): A single-character string containing one of: [.,!?]
+        text (str): Any text; optional, default None.
+    
+    Returns:
+        str: Corrected text.
+    
+    Warning:
+        Changes contents of the clipboard.
+    
+    """
     if text is None:
         text = pyperclip.paste()
     if end_punctuation is not None:
