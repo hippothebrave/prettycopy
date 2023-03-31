@@ -6,7 +6,7 @@ dev_intro.md
 
 # Welcome to prettycopy's documentation!
 
-Welcome to PrettyCopy: a beginner-friendly library intended to ensure clean, format-friendly copy-pasting.
+Welcome to PrettyCopy: a beginner-friendly library intended to ensure clean, format-friendly copy-pasting!
 
 [![License](https://img.shields.io/github/license/hippothebrave/prettycopy)](https://github.com/hippothebrave/prettycopy/blob/main/LICENSE)
 [![GitHub issues](https://img.shields.io/github/issues/hippothebrave/prettycopy)](https://github.com/hippothebrave/prettycopy/issues)
