@@ -10,7 +10,7 @@ jobs:
       - uses: actions/setup-python@v3
       - name: Install dependencies
         run: |
-          pip install sphinx sphinx_sizzle_theme myst_parser sphinx.ext.autodoc
+          pip install sphinx sphinx_sizzle_theme myst_parser
       - name: Sphinx build
         run: |
           sphinx-build html
