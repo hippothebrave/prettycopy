@@ -1,6 +1,7 @@
 # import prettycopy as pc
 import prettycopy.prettycopy as pc
 from prettycopy.gdocs import getservice
+
 # from prettycopy import nonewlines, nobullets, bullettopar, quote, simplequote
 from unittest.mock import patch, MagicMock
 from googleapiclient.errors import HttpError

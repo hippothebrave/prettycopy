@@ -7,18 +7,18 @@ from googleapiclient.errors import HttpError
 def nonewlines(text=None):
     """Remove all newlines.
 
-    Takes in a text input from the argument or (by default) the clipboard, removes all newlines, 
+    Takes in a text input from the argument or (by default) the clipboard, removes all newlines,
     and recopies it to the clipboard.
 
     Args:
         text (str): Any text; optional, default None.
-    
+
     Returns:
         str: Corrected text.
-    
+
     Warning:
         Changes contents of the clipboard.
-        
+
     """
     if text is None:
         text = pyperclip.paste()
@@ -29,19 +29,19 @@ def nonewlines(text=None):
 
 def nobullets(text=None):
     """Take out old newlines, replace bullets with newlines.
-    
+
     Takes in a text input from the argument or (by default) the clipboard. Removes all newlines,
     and replaces any bullet symbols with newlines.
 
     Args:
         text (str): Any text; optional, default None.
-    
+
     Returns:
         str: Corrected text.
-    
+
     Warning:
         Changes contents of the clipboard.
-    
+
     """
     if text is None:
         text = pyperclip.paste()
@@ -59,13 +59,13 @@ def bullettopar(text=None):
 
     Args:
         text (str): Any text; optional, default None.
-    
+
     Returns:
         str: Corrected text.
-        
+
     Warning:
         Changes contents of the clipboard.
-    
+
     """
     if text is None:
         text = pyperclip.paste()
@@ -78,16 +78,16 @@ def bullettopar(text=None):
 # FIXME: only pastes at end of document
 def betterbullets(docID):
     """Add clipboard content to end of Google Doc as a bulleted list.
-    
+
     Takes text from the clipboard. Removes all newlines and replaces bullet symbols with newlines.
     Copies the text to the end of a Google Doc as a bulleted list.
 
     Args:
         docID (str): The ID of a Google Doc.
-    
+
     Returns:
         str: Corrected text.
-    
+
     """
     # get content
     text = nobullets()
@@ -153,13 +153,13 @@ def simplequote(text=None):
 
     Args:
         text (str): Any text; optional, default None.
-    
+
     Returns:
         str: Corrected text.
-    
+
     Warning:
         Changes contents of the clipboard.
-    
+
     """
     if text is None:
         text = pyperclip.paste()
@@ -176,13 +176,13 @@ def quote(end_punctuation=None, text=None):
     Args:
         end_punctuation (str): A single-character string containing one of: [.,!?]
         text (str): Any text; optional, default None.
-    
+
     Returns:
         str: Corrected text.
-    
+
     Warning:
         Changes contents of the clipboard.
-    
+
     """
     if text is None:
         text = pyperclip.paste()

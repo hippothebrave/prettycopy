@@ -16,16 +16,16 @@ from googleapiclient.errors import HttpError
 # CITATION: Google Docs API quickstart
 def getservice(DOCUMENT_ID, SCOPES=None):
     """Credentials testing
-    
+
     Gets permissions to access the Google Docs API for a given Google Doc.
 
     Args:
         DOCUMENT_ID (str): The ID of a Google Doc.
         SCOPES (str): The permissions desired; optional, default None.
-    
+
     Returns:
         service: Object used to access the Google Docs API.
-    
+
     """
 
     creds = None
