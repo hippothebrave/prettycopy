@@ -1,20 +1,20 @@
-.. prettycopy documentation master file, created by
-   sphinx-quickstart on Wed Mar 29 17:19:59 2023.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
-Welcome to prettycopy's documentation!
-======================================
-
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
 
+   dev_intro
+   random_page
+
+Welcome to Getting Started with Sphinx's documentation!
+=======================================================
+
+.. automodule:: prettycopy.prettycopy
+    :members:
 
 
 Indices and tables
 ==================
-
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
