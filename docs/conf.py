@@ -14,21 +14,11 @@ release = '0.1.1'
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ['recommonmark', 'sphinx.ext.autodoc']
+extensions = ['myst_parser', 'sphinx.ext.autodoc'] #prev, recommonmark
 source_suffix = ['.rst', '.md']
 
-from recommonmark.transform import AutoStructify
 import sys, os
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-# sys.path.insert(0, os.path.abspath('..'))
-
-def setup(app):
-    app.add_config_value('recommonmark_config', {
-        'auto_toc_tree_section': 'Contents',
-    }, True)
-    app.add_transform(AutoStructify)
-
-
 
 templates_path = ['_templates']
 exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
@@ -41,3 +31,6 @@ exclude_patterns = ['_build', 'Thumbs.db', '.DS_Store']
 
 html_theme = 'sizzle'
 html_static_path = ['_static']
+html_theme_options = {
+    "globaltoc_depth":2
+}
