@@ -1,6 +1,6 @@
 import pyperclip
 import re
-import gdocs
+import prettycopy.gdocs
 from googleapiclient.errors import HttpError
 
 
@@ -93,7 +93,7 @@ def betterbullets(docID):
     text = nobullets()
 
     # authenticate so that you can access the google doc
-    service = gdocs.getservice()
+    service = prettycopy.gdocs.getservice()
 
     # find end of current google doc content
     document = service.documents().get(documentId=docID).execute()

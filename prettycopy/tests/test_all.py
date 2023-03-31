@@ -1,5 +1,7 @@
-import prettycopy as pc
-from gdocs import getservice
+# import prettycopy as pc
+import prettycopy.prettycopy as pc
+from prettycopy.gdocs import getservice
+# from prettycopy import nonewlines, nobullets, bullettopar, quote, simplequote
 from unittest.mock import patch, MagicMock
 from googleapiclient.errors import HttpError
 
@@ -20,12 +22,13 @@ def test_nonewlines():
 
 def test_nobullets():
     with patch("pyperclip.copy") as copy_mock, patch("pyperclip.paste") as paste_mock, patch(
-        "prettycopy.nonewlines"
+        "prettycopy.prettycopy.nonewlines"
     ) as newline_mock:
         # No spaces
         paste_mock.return_value = "•Test\n•Test"
         newline_mock.return_value = "•Test•Test"
         ret = pc.nobullets()
+        newline_mock.assert_called_once()
         assert newline_mock.call_args.args == ()
         assert ret == "Test\nTest"
         assert copy_mock.call_args.args == (ret,)
