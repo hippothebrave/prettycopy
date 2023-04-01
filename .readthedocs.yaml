@@ -29,5 +29,5 @@ python:
       path: .
       extra_requirements:
         - docs
-        - myst-parser
     - method: pip
+      path: myst-parser
