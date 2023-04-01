@@ -31,4 +31,3 @@ python:
         - docs
         - myst-parser
     - method: pip
-      path: package
