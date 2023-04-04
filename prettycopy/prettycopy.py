@@ -1,7 +1,16 @@
 import pyperclip
 import re
-import prettycopy.gdocs
 from googleapiclient.errors import HttpError
+
+import os.path
+
+from google.auth.transport.requests import Request
+from google.oauth2.credentials import Credentials
+from google_auth_oauthlib.flow import InstalledAppFlow
+
+import googleapiclient.discovery
+
+# PUBLIC FUNCTIONS
 
 
 def nonewlines(text=None):
@@ -22,7 +31,10 @@ def nonewlines(text=None):
     """
     if text is None:
         text = pyperclip.paste()
-    text = ''.join(text.splitlines())
+    if not isinstance(text, str):
+        raise ValueError("PrettyCopy can only take in strings!")
+
+    text = ' '.join([line.strip() for line in text.split()])
     pyperclip.copy(text)
     return text
 
@@ -45,8 +57,11 @@ def nobullets(text=None):
     """
     if text is None:
         text = pyperclip.paste()
-    text = nonewlines().lstrip("• ")
-    text = re.sub(r"•\s*", "\n", text)
+    if not isinstance(text, str):
+        raise ValueError("PrettyCopy can only take in strings!")
+
+    text = nonewlines().strip("• ")
+    text = re.sub(r"\s*•\s*", "\n", text)
     pyperclip.copy(text)
     return text
 
@@ -69,7 +84,94 @@ def bullettopar(text=None):
     """
     if text is None:
         text = pyperclip.paste()
-    text = ' '.join([re.sub(r"•\s*", " ", line).strip() for line in text.splitlines()])
+    if not isinstance(text, str):
+        raise ValueError("PrettyCopy can only take in strings!")
+
+    text = ' '.join([line.strip() for line in text.split()]).strip("• ")
+    text = re.sub(r"\s*•\s*", " ", text)
+    pyperclip.copy(text)
+    return text
+
+
+def simplequote(text=None):
+    """Add quotes around clipboard contents.
+
+    Adds quotation marks around a text input from the argument or (by default) the clipboard.
+
+    Args:
+        text (str): Any text; optional, default None.
+
+    Returns:
+        str: Corrected text.
+
+    Warning:
+        Changes contents of the clipboard.
+
+    """
+    if text is None:
+        text = pyperclip.paste()
+    if not isinstance(text, str):
+        raise ValueError("PrettyCopy can only take in strings!")
+
+    text = '"' + text + '"'
+    pyperclip.copy(text)
+    return text
+
+
+def quote(end_punctuation=None, text=None):
+    """Add quotes (and optional comma) around clipboard contents.
+
+    Adds quotation marks and end punctuation to a text input from the argument or (by default) the clipboard.
+
+    Args:
+        end_punctuation (str): A single-character string containing one of: [.,!?]
+        text (str): Any text; optional, default None.
+
+    Returns:
+        str: Corrected text.
+
+    Warning:
+        Changes contents of the clipboard.
+
+    """
+    if text is None:
+        text = pyperclip.paste()
+    if not isinstance(text, str):
+        raise ValueError("PrettyCopy can only take in strings!")
+
+    if end_punctuation is not None:
+        if len(end_punctuation) != 1:
+            raise ValueError("End punctuation should be a single character.")
+        elif end_punctuation not in [',', '.', '!', '?']:
+            raise ValueError("End punctuation should be one of: [.,!?]")
+        text = '"' + text + end_punctuation + '"'
+    else:
+        text = '"' + text + ',"'
+    pyperclip.copy(text)
+    return text
+
+
+def trimspacing(text=None):
+    """Removes empty lines clipboard contents.
+
+    Removes empty lines from a text input from the argument or (by default) the clipboard.
+
+    Args:
+        text (str): Any text; optional, default None.
+
+    Returns:
+        str: Corrected text.
+
+    Warning:
+        Changes contents of the clipboard.
+    """
+    if text is None:
+        text = pyperclip.paste()
+    if not isinstance(text, str):
+        raise ValueError("PrettyCopy can only take in strings!")
+
+    text = re.sub(r"(\r?\n)+", "\n", text)
+    text = text.strip()
     pyperclip.copy(text)
     return text
 
@@ -93,7 +195,7 @@ def betterbullets(docID):
     text = nobullets()
 
     # authenticate so that you can access the google doc
-    service = prettycopy.gdocs.getservice(docID)
+    service = _getservice(docID)
 
     # find end of current google doc content
     document = service.documents().get(documentId=docID).execute()
@@ -146,56 +248,54 @@ def betterbullets(docID):
     return text
 
 
-def simplequote(text=None):
-    """Add quotes around clipboard contents.
-
-    Adds quotation marks around a text input from the argument or (by default) the clipboard.
-
-    Args:
-        text (str): Any text; optional, default None.
-
-    Returns:
-        str: Corrected text.
-
-    Warning:
-        Changes contents of the clipboard.
-
-    """
-    if text is None:
-        text = pyperclip.paste()
-    text = '"' + text + '"'
-    pyperclip.copy(text)
-    return text
+# HIDDEN FUNCTIONS
 
 
-def quote(end_punctuation=None, text=None):
-    """Add quotes (and optional comma) around clipboard contents.
+# Authorizes the user to access Google Docs
+# CITATION: Google Docs API quickstart
+def _getservice(DOCUMENT_ID, SCOPES=None):
+    """Credentials testing
 
-    Adds quotation marks and end punctuation to a text input from the argument or (by default) the clipboard.
+    Gets permissions to access the Google Docs API for a given Google Doc.
 
     Args:
-        end_punctuation (str): A single-character string containing one of: [.,!?]
-        text (str): Any text; optional, default None.
+        DOCUMENT_ID (str): The ID of a Google Doc.
+        SCOPES (str): The permissions desired; optional, default None.
 
     Returns:
-        str: Corrected text.
-
-    Warning:
-        Changes contents of the clipboard.
+        service: Object used to access the Google Docs API.
 
     """
-    if text is None:
-        text = pyperclip.paste()
-    if end_punctuation is not None:
-        if len(end_punctuation) != 1:
-            raise ValueError("End punctuation should be a single character.")
-        elif end_punctuation not in [',', '.', '!', '?']:
-            raise ValueError("End punctuation should be one of: [.,!?]")
-        text = '"' + text + end_punctuation + '"'
+
+    creds = None
+
+    if SCOPES is None:
+        # If modifying these scopes, delete the file token.json.
+        SCOPES = ['https://www.googleapis.com/auth/documents']
     else:
-        text = '"' + text + ',"'
-    pyperclip.copy(text)
-    return text
+        if os.path.exists('../token.json'):
+            os.remove('../token.json')
 
+    # The file token.json stores the user's access and refresh tokens.
+    # Created automatically when the authorization flow completes for the first time.
+    if os.path.exists('../token.json'):
+        creds = Credentials.from_authorized_user_file('../token.json', SCOPES)
+    # If there are no (valid) credentials available, let the user log in.
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file('../credentials.json', SCOPES)
+            creds = flow.run_local_server(port=0)
+        # Save the credentials for the next run
+        with open('../token.json', 'w') as token:
+            token.write(creds.to_json())
 
-# TODO: turn excess newlines into only one
+    # Create + return "service", which you can use to access the Docs API
+    try:
+        service = googleapiclient.discovery.build('docs', 'v1', credentials=creds)
+    except HttpError as err:
+        print(err)
+        return
+
+    return service
