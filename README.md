@@ -49,4 +49,6 @@ You can enter the text as an argument to the function, and PrettyCopy will autom
 
 > Example: *this is a test* --> prettycopy.quote('!') --> *"this is a test!"*
 
+`prettycopy.trimspacing(optional_text)`: Removes empty lines.
+
 `prettycopy.betterbullets(docID)`: If you enter the document ID of an editable Google Doc (the long string of letters and numbers in the URL), this function will copy the text in your clipboard to the end of the document, replacing all bullet symbols (•) with correctly-formatted bullet points. Still under construction.

@@ -136,6 +136,26 @@ pc.quote('!')
 
 
 ```{eval-rst}
+.. autofunction:: prettycopy.prettycopy.trimspacing
+```
+
+EXAMPLES:
+```python
+import prettycopy.prettycopy as pc
+# If you have copied the text:
+    # Example 
+    # 
+    # text 
+    # 
+    # here
+pc.trimspacing()
+# your clipboard content becomes: 
+    # Example
+    # text 
+    # here
+```
+
+```{eval-rst}
 .. autofunction:: prettycopy.prettycopy.betterbullets
 ```
 
