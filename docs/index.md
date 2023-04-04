@@ -39,12 +39,107 @@ For added flexibility: You can enter the text as an argument to the function, an
 
 ## Functions
 
-(Note: the *betterbullets* function is still under construction!)
-
-```{eval-rst}
+<!-- ```{eval-rst}
 .. automodule:: prettycopy.prettycopy
    :members:
+``` -->
+
+```{eval-rst}
+.. autofunction:: prettycopy.prettycopy.bullettopar
 ```
+
+EXAMPLE:
+```python
+import prettycopy.prettycopy as pc
+# If you have copied the text:
+    # • Example
+    # • text
+    # • here
+pc.bullettopar()
+# your clipboard content becomes: 
+    # Example text here
+```
+
+![bullettopar_ex](images/prettycopy%20bullettopar%20example.gif)
+
+
+```{eval-rst}
+.. autofunction:: prettycopy.prettycopy.nonewlines
+```
+
+EXAMPLE:
+```python
+import prettycopy.prettycopy as pc
+# If you have copied the text:
+    # Example
+    # text
+    # here
+pc.nonewlines()
+# your clipboard content becomes: 
+    # Example text here
+```
+
+
+```{eval-rst}
+.. autofunction:: prettycopy.prettycopy.nobullets
+```
+
+EXAMPLE:
+```python
+import prettycopy.prettycopy as pc
+# If you have copied the text:
+    # • Example
+    # • text
+    # • here
+pc.nobullets()
+# your clipboard content becomes: 
+    # Example 
+    # text 
+    # here
+```
+
+
+```{eval-rst}
+.. autofunction:: prettycopy.prettycopy.simplequote
+```
+
+EXAMPLE:
+```python
+import prettycopy.prettycopy as pc
+# If you have copied the text:
+    # Example text here
+pc.simplequote()
+# your clipboard content becomes: 
+    # "Example text here"
+```
+
+
+```{eval-rst}
+.. autofunction:: prettycopy.prettycopy.quote
+```
+
+EXAMPLES:
+```python
+import prettycopy.prettycopy as pc
+# If you have copied the text:
+    # Example text here
+pc.quote()
+# your clipboard content becomes: 
+    # "Example text here,"
+
+# If you copy the same text:
+    # Example text here
+pc.quote('!')
+# your clipboard content becomes: 
+    # "Example text here!"
+```
+
+
+```{eval-rst}
+.. autofunction:: prettycopy.prettycopy.betterbullets
+```
+
+(Note: this function is still under development! *Do not use it. It will not work.*)
 
 ## For developers
 
