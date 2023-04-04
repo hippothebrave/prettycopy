@@ -93,7 +93,7 @@ def betterbullets(docID):
     text = nobullets()
 
     # authenticate so that you can access the google doc
-    service = prettycopy.gdocs.getservice()
+    service = prettycopy.gdocs.getservice(docID)
 
     # find end of current google doc content
     document = service.documents().get(documentId=docID).execute()
