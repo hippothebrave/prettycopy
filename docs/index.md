@@ -60,7 +60,7 @@ pc.bullettopar()
     # Example text here
 ```
 
-![bullettopar_ex](https://raw.githubusercontent.com/hippothebrave/prettycopy/main/docs/images/bullettopar.gif)
+<img src="https://raw.githubusercontent.com/hippothebrave/prettycopy/main/docs/images/bullettopar.gif" alt= “Example usage of the code” width="50%" height="50%">
 
 
 ```{eval-rst}
