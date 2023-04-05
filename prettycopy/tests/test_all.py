@@ -1,16 +1,26 @@
-# import prettycopy as pc
 import prettycopy.prettycopy as pc
-from prettycopy.gdocs import getservice
 
-# from prettycopy import nonewlines, nobullets, bullettopar, quote, simplequote
 from unittest.mock import patch, MagicMock
 from googleapiclient.errors import HttpError
+
+import pytest
 
 
 def test_nonewlines():
     with patch("pyperclip.copy") as copy_mock, patch("pyperclip.paste") as paste_mock:
+        # Bad type
+        paste_mock.return_value = 77
+        with pytest.raises(ValueError):
+            ret = pc.nonewlines()
+
         # Text from clipboard
         paste_mock.return_value = "Testing\n line \nof text\n here."
+        ret = pc.nonewlines()
+        assert ret == "Testing line of text here."
+        assert copy_mock.call_args.args == (ret,)
+
+        # Spacing
+        paste_mock.return_value = "Testing\nline\nof text\nhere."
         ret = pc.nonewlines()
         assert ret == "Testing line of text here."
         assert copy_mock.call_args.args == (ret,)
@@ -25,9 +35,14 @@ def test_nobullets():
     with patch("pyperclip.copy") as copy_mock, patch("pyperclip.paste") as paste_mock, patch(
         "prettycopy.prettycopy.nonewlines"
     ) as newline_mock:
+        # Bad type
+        paste_mock.return_value = 42
+        with pytest.raises(ValueError):
+            ret = pc.nobullets()
+
         # No spaces
         paste_mock.return_value = "•Test\n•Test"
-        newline_mock.return_value = "•Test•Test"
+        newline_mock.return_value = '•Test •Test'
         ret = pc.nobullets()
         newline_mock.assert_called_once()
         assert newline_mock.call_args.args == ()
@@ -36,7 +51,15 @@ def test_nobullets():
 
         # Spaces between bullet and text
         paste_mock.return_value = "• Test\n• Test"
-        newline_mock.return_value = "• Test• Test"
+        newline_mock.return_value = '• Test • Test'
+        ret = pc.nobullets()
+        assert newline_mock.call_args.args == ()
+        assert ret == "Test\nTest"
+        assert copy_mock.call_args.args == (ret,)
+
+        # Spaces around bullet and text
+        paste_mock.return_value = "   • Test\n  •\tTest   •"
+        newline_mock.return_value = '• Test • Test •'
         ret = pc.nobullets()
         assert newline_mock.call_args.args == ()
         assert ret == "Test\nTest"
@@ -44,14 +67,14 @@ def test_nobullets():
 
         # Bullets within words
         paste_mock.return_value = "•   Te•st• Test"
-        newline_mock.return_value = "•   Te•st• Test"
+        newline_mock.return_value = '• Te•st• Test'
         ret = pc.nobullets()
         assert newline_mock.call_args.args == ()
         assert ret == "Te\nst\nTest"
         assert copy_mock.call_args.args == (ret,)
 
         # Text from argument
-        newline_mock.return_value = "•Another•Test"
+        newline_mock.return_value = '•Another •Test'
         ret = pc.nobullets("•Another\n•Test")
         assert newline_mock.call_args.args == ()
         assert ret == "Another\nTest"
@@ -60,32 +83,48 @@ def test_nobullets():
 
 def test_bullettopar():
     with patch("pyperclip.copy") as copy_mock, patch("pyperclip.paste") as paste_mock:
+        # Bad type
+        paste_mock.return_value = 77
+        with pytest.raises(ValueError):
+            pc.bullettopar()
+
         # No spaces
         paste_mock.return_value = "•Test\n•Test"
-        ret = pc.bullettopar()
-        assert ret == "Test Test"
-        assert copy_mock.call_args.args == (ret,)
+        ret1 = pc.bullettopar()
+        assert ret1 == "Test Test"
+        assert copy_mock.call_args.args == (ret1,)
 
         # Spaces after bullets
         paste_mock.return_value = "• Test\n• Test"
-        ret = pc.bullettopar()
-        assert ret == "Test Test"
-        assert copy_mock.call_args.args == (ret,)
+        ret2 = pc.bullettopar()
+        assert ret2 == "Test Test"
+        assert copy_mock.call_args.args == (ret2,)
+
+        # Spaces around bullet and text
+        paste_mock.return_value = "   • Test\n  •\tTest   •"
+        ret3 = pc.bullettopar()
+        assert ret3 == "Test Test"
+        assert copy_mock.call_args.args == (ret3,)
 
         # Bullets within words
         paste_mock.return_value = "•   Te•st• Test"
-        ret = pc.bullettopar()
-        assert ret == "Te st Test"
-        assert copy_mock.call_args.args == (ret,)
+        ret4 = pc.bullettopar()
+        assert ret4 == "Te st Test"
+        assert copy_mock.call_args.args == (ret4,)
 
         # Text from argument
-        ret = pc.bullettopar("•Another\n•Test")
-        assert ret == "Another Test"
-        assert copy_mock.call_args.args == (ret,)
+        ret5 = pc.bullettopar("•Another\n•Test")
+        assert ret5 == "Another Test"
+        assert copy_mock.call_args.args == (ret5,)
 
 
 def test_simplequote():
     with patch("pyperclip.copy") as copy_mock, patch("pyperclip.paste") as paste_mock:
+        # Bad type
+        paste_mock.return_value = 77
+        with pytest.raises(ValueError):
+            ret = pc.simplequote()
+
         # Argument from clipboard
         paste_mock.return_value = 'Test test'
         ret = pc.simplequote()
@@ -101,6 +140,11 @@ def test_simplequote():
 # TODO: check ValueErrors
 def test_quote():
     with patch("pyperclip.copy") as copy_mock, patch("pyperclip.paste") as paste_mock:
+        # Bad type
+        paste_mock.return_value = 77
+        with pytest.raises(ValueError):
+            ret = pc.quote()
+
         # No arguments
         paste_mock.return_value = 'Test test'
         ret = pc.quote()
@@ -125,19 +169,46 @@ def test_quote():
 
         # Incorrect punctuation argument
         paste_mock.return_value = 'Test test'
-        try:
+        with pytest.raises(ValueError):
             ret = pc.quote('test')
-            assert True == False  # noqa E712
-        except ValueError:
-            assert len('test') > 1
+        assert len('test') > 1
 
         # Incorrect punctuation argument
         paste_mock.return_value = 'Test test'
-        try:
+        with pytest.raises(ValueError):
             ret = pc.quote(';')
-            assert True == False  # noqa E712
-        except ValueError:
-            assert ';' not in [',', '.', '!', '?']
+        assert ';' not in [',', '.', '!', '?']
+
+
+def test_trimspacing():
+    with patch("pyperclip.copy") as copy_mock, patch("pyperclip.paste") as paste_mock:
+        # Bad type
+        paste_mock.return_value = 77
+        with pytest.raises(ValueError):
+            ret = pc.trimspacing()
+
+        # multi-line break
+        paste_mock.return_value = "Test\n\n\nhere"
+        ret = pc.trimspacing()
+        assert ret == "Test\nhere"
+        assert copy_mock.call_args.args == (ret,)
+
+        # windows
+        paste_mock.return_value = "Test\r\n\r\nhere"
+        ret = pc.trimspacing()
+        assert ret == "Test\nhere"
+        assert copy_mock.call_args.args == (ret,)
+
+        # no repeats, spacing at beginning or end
+        paste_mock.return_value = "   Test\nhere\n"
+        ret = pc.trimspacing()
+        assert ret == "Test\nhere"
+        assert copy_mock.call_args.args == (ret,)
+
+        # text from argument
+        ret = pc.trimspacing("Another\r\n\r\n\r\ntest")
+        assert ret == "Another\ntest"
+        assert copy_mock.call_args.args == (ret,)
 
 
 # TODO: check that HTTPError is printed in Test 4
@@ -168,7 +239,7 @@ def test_getservice():
         fakeservice1 = MagicMock()
         build_mock.return_value = fakeservice1  # FIXME there was an issue here
 
-        ret = getservice('1yxH3v4zi82pEMKW41MbZRqKz8JXRbhrb5yJnEdSfJC0')
+        ret = pc._getservice('1yxH3v4zi82pEMKW41MbZRqKz8JXRbhrb5yJnEdSfJC0')
 
         assert os_mock.call_count == 1
         assert creds_file_mock.call_count == 1
@@ -199,7 +270,7 @@ def test_getservice():
         fakeservice2 = MagicMock()
         build_mock.return_value = fakeservice2
 
-        ret = getservice('1yxH3v4zi82pEMKW41MbZRqKz8JXRbhrb5yJnEdSfJC0')
+        ret = pc._getservice('1yxH3v4zi82pEMKW41MbZRqKz8JXRbhrb5yJnEdSfJC0')
 
         assert os_mock.call_count == 1
         assert creds_file_mock.call_count == 2
@@ -233,7 +304,7 @@ def test_getservice():
         fakeservice3 = MagicMock()
         build_mock.return_value = fakeservice3
 
-        ret = getservice('1yxH3v4zi82pEMKW41MbZRqKz8JXRbhrb5yJnEdSfJC0', SCOPES)
+        ret = pc._getservice('1yxH3v4zi82pEMKW41MbZRqKz8JXRbhrb5yJnEdSfJC0', SCOPES)
 
         assert os_mock.call_count == 2
         assert get_secrets_mock.call_args.args == (
@@ -266,7 +337,7 @@ def test_getservice():
         # raise error when building service
         build_mock.side_effect = HttpError(resp=MagicMock(), content=b'test')
 
-        ret = getservice('1yxH3v4zi82pEMKW41MbZRqKz8JXRbhrb5yJnEdSfJC0', SCOPES)
+        ret = pc._getservice('1yxH3v4zi82pEMKW41MbZRqKz8JXRbhrb5yJnEdSfJC0', SCOPES)
 
         assert os_remove_mock.call_count == 1
         assert os_mock.call_count == 2
@@ -289,7 +360,7 @@ def test_getservice():
 # def test_betterbullets():
 #     with patch("prettycopy.nobullets") as nobullets_mock:
 #         nobullets_mock.return_value = "Test\ncontent\nhere"
-#         service = getservice()
+#         service = pc._getservice()
 
 #         # find end of current google doc content
 #         document = service.documents().get(documentId="1yxH3v4zi82pEMKW41MbZRqKz8JXRbhrb5yJnEdSfJC0").execute()

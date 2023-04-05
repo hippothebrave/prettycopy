@@ -27,25 +27,9 @@ Prerequisites: Install Python. At the moment, PrettyCopy runs on Python version 
 ### Make changes
 Now make your changes.
 
-Run tests to ensure that your changes does not break anything.
+Create, add to, and run tests to ensure that your changes work as expected and do not break anything. Run tests with the command `make test`, and check if there's any code left untested with the command `make coverage`. All test files should go under the *prettycopy/tests/* directory, and all test functions must begin with the prefix `test_` in order to be recognized.
 
-```
-make test
-```
-
-Edit or add to the existing tests to check that your changes work as expected. All test files should go under the *prettycopy/tests/* directory, and all test functions must begin with the prefix `test_`. You can run `make coverage` to see if there's any code left untested.
-
-Check the formatting of your code by running
-
-```
-make lint
-```
-
-and if necessary, automatically fix the style by running
-
-```
-make format
-```
+Check the formatting of your code by running `make lint`. As necessary, automatically fix the formatting by running `make format`.
 
 Finally, as a last check, you may wish to try building your code before making the pull request. That means running, in order,
 
