@@ -356,6 +356,102 @@ def test_getservice():
         print_mock.assert_called()
 
 
+# TODO implement test
+def test_smartcopy():
+    with patch("pyperclip.copy") as copy_mock, patch("pyperclip.paste") as paste_mock, patch(
+        "prettycopy.prettycopy.trimspacing"
+    ) as trim_mock, patch(
+        "nltk.tokenize.sent_tokenize"
+    ) as tokenize_mock, patch(
+        "prettycopy.prettycopy._cleanlines"
+    ) as cleanlines_mock:
+        # Bad type
+        paste_mock.return_value = 77
+        with pytest.raises(ValueError):
+            pc.smartcopy()
+        
+        # no newlines in the text
+        paste_mock.return_value = "lorem ipsum"
+        trim_mock.return_value = "Sentence one. Sentence two."
+        tokenize_mock.return_value = ["Sentence one.", "Sentence two."]
+        cleanlines_mock.side_effect = ["Sentence one.", "Sentence two."]
+        ret = pc.smartcopy()
+        assert ret == "Sentence one. Sentence two."
+        assert copy_mock.call_args.args == (ret,)
+
+        # newlines
+        paste_mock.return_value = "lorem ipsum"
+        trim_mock.return_value = "Sentence one.\n Sentence two."
+        tokenize_mock.return_value = ["Sentence one.", "Sentence two."]
+        cleanlines_mock.side_effect = ["Sentence one.", "Sentence two."]
+        ret = pc.smartcopy()
+        assert ret == "Sentence one.\nSentence two."
+        assert copy_mock.call_args.args == (ret,)
+
+        # text from argument
+        trim_mock.return_value = "Sentence one.\n Sentence two."
+        tokenize_mock.return_value = ["Sentence one.", "Sentence two."]
+        cleanlines_mock.side_effect = ["Sentence one.", "Sentence two."]
+        ret = pc.smartcopy("Sentence one.\n Sentence two.")
+        assert ret == "Sentence one.\nSentence two."
+        assert copy_mock.call_args.args == (ret,)
+
+    
+        assert True
+
+
+# TODO implement test
+def test_cleanlines():
+    with patch("spellchecker.SpellChecker") as spellchecker_mock, patch(
+        "textblob.TextBlob"
+    ) as textblob_mock,  patch(
+        "nltk.corpus.words"
+    ) as words_mock:
+        
+        # no space needed
+        spell = MagicMock()
+        spellchecker_mock.return_value = spell
+        spell.correction = MagicMock()
+        spell.correction.side_effect = ["sent", "nice", "go", "is"]
+        b1 = MagicMock()
+        b1.correct = MagicMock()
+        b2 = MagicMock()
+        b2.correct = MagicMock()
+        textblob_mock.side_effect = [b1, b2]
+        b1.correct.side_effect = ["sent", "go"]
+        b2.correct.side_effect = ["nice", "is"]
+        words_mock.return_value = False
+        line = "Sente\nnce 1 goe\ns here."
+        ret = pc._cleanlines(line)
+        assert ret == "Sentence 1 goes here."
+
+        # space needed
+        spell = MagicMock()
+        spellchecker_mock.return_value = spell
+        spell.correction = MagicMock()
+        spell.correction.side_effect = ["goes", "here"]
+        b1 = MagicMock()
+        b1.correct = MagicMock()
+        b2 = MagicMock()
+        b2.correct = MagicMock()
+        textblob_mock.side_effect = [b1, b2]
+        b1.correct.side_effect = ["goes"]
+        b2.correct.side_effect = ["here"]
+        words_mock.return_value = False
+        line = "Sentence 2 goes\nhere."
+        ret = pc._cleanlines(line)
+        assert ret == "Sentence 2 goes here."
+
+        # newline not within a word
+        line = "Sentence 3 goes \nhere."
+        ret = pc._cleanlines(line)
+        assert ret == "Sentence 3 goes here."
+        
+
+
+        assert True
+
+
 # TODO: test for prettycopy.betterbullets
 # def test_betterbullets():
 #     with patch("prettycopy.nobullets") as nobullets_mock:

@@ -10,6 +10,19 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 
 import googleapiclient.discovery
 
+# TODO add to list of reqs
+import nltk
+from nltk import tokenize
+from nltk.corpus import words
+from textblob import TextBlob
+from spellchecker import SpellChecker
+
+try:
+    nltk.data.find('tokenizers/words')
+except LookupError:
+    nltk.download("words", quiet=True)
+
+
 # PUBLIC FUNCTIONS
 
 
@@ -248,6 +261,46 @@ def betterbullets(docID):
     return text
 
 
+def smartcopy(text=None):
+    """Removes line breaks from clipboard contents in a smart way.
+
+    Removes line breaks--adding a space if a line break splits a word in two, but not
+    if the line break is between words--from a text input from the argument or (by default) the clipboard.
+
+    Args:
+        text (str): Any text; optional, default None.
+
+    Returns:
+        str: Corrected text.
+
+    Warning:
+        Changes contents of the clipboard.
+    """
+    if text is None:
+        text = pyperclip.paste()
+    if not isinstance(text, str):
+        raise ValueError("PrettyCopy can only take in strings!")
+
+    text = trimspacing(text)
+    lines = tokenize.sent_tokenize(text)
+    for i in range(len(lines) - 1):
+        start = text.find(lines[i]) + len(lines[i])  # char after end of sentence
+        end = text.find(lines[i + 1])  # char @ beginning of next sentence
+        lines[i] = _cleanlines(lines[i])
+        substr = text[start:end]
+        if '\n' in substr:
+            lines[i] = lines[i] + '\n'
+        else:
+            lines[i] = lines[i] + ' '
+
+    lines[-1] = _cleanlines(lines[-1])
+
+    text = ''.join(lines)
+
+    pyperclip.copy(text)
+    return text
+
+
 # HIDDEN FUNCTIONS
 
 
@@ -299,3 +352,43 @@ def _getservice(DOCUMENT_ID, SCOPES=None):
         return
 
     return service
+
+
+# Removes newlines from a sentence,
+# adding a space if it's surrounded by recognizable English words
+# and no space if it isn't.
+# RETURNS NOTHING.
+# TODO that's an anti-pattern imo
+def _cleanlines(line):
+    spell = SpellChecker()
+    # remove newlines "within words"
+    for match in re.finditer(r"([A-Za-z0-9]+)(\r?\n)+([A-Za-z0-9]+)", line):
+
+        b1 = TextBlob(match.group(1))
+        b2 = TextBlob(match.group(3))
+
+        loc = line.find(str(match.group(1) + match.group(2) + match.group(3))) + len(match.group(1))
+
+        if (
+                (
+                    match.group(1) == spell.correction(match.group(1))
+                    or match.group(1) == b1.correct()
+                    or match.group(1) in words.words()
+                )
+                and (
+                    match.group(3) == spell.correction(match.group(3))
+                    or match.group(3) == b2.correct()
+                    or match.group(3) in words.words()
+                )
+        ):
+            line = list(line)
+            line[loc] = " "
+            line = ''.join(line)
+        else:
+            line = list(line)
+            line[loc] = ""
+            line = ''.join(line)
+    
+    # remove any remaining newlines
+    line = re.sub(r"(\r?\n)+", "", line)
+    return line
