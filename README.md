@@ -51,4 +51,8 @@ You can enter the text as an argument to the function, and PrettyCopy will autom
 
 `prettycopy.trimspacing(optional_text)`: Removes empty lines.
 
+`prettycopy.smartcopy(optional_text)`: Removes line breaks in an intelligent manner: adding spaces between words, but not inside words that have been split.
+
+> Example: *this\nis a te\nst* --> prettycopy.smartcopy() --> *this is a test*
+
 `prettycopy.betterbullets(docID)`: If you enter the document ID of an editable Google Doc (the long string of letters and numbers in the URL), this function will copy the text in your clipboard to the end of the document, replacing all bullet symbols (•) with correctly-formatted bullet points. Still under construction.
