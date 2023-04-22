@@ -360,16 +360,14 @@ def test_getservice():
 def test_smartcopy():
     with patch("pyperclip.copy") as copy_mock, patch("pyperclip.paste") as paste_mock, patch(
         "prettycopy.prettycopy.trimspacing"
-    ) as trim_mock, patch(
-        "nltk.tokenize.sent_tokenize"
-    ) as tokenize_mock, patch(
+    ) as trim_mock, patch("nltk.tokenize.sent_tokenize") as tokenize_mock, patch(
         "prettycopy.prettycopy._cleanlines"
     ) as cleanlines_mock:
         # Bad type
         paste_mock.return_value = 77
         with pytest.raises(ValueError):
             pc.smartcopy()
-        
+
         # no newlines in the text
         paste_mock.return_value = "lorem ipsum"
         trim_mock.return_value = "Sentence one. Sentence two."
@@ -396,18 +394,14 @@ def test_smartcopy():
         assert ret == "Sentence one.\nSentence two."
         assert copy_mock.call_args.args == (ret,)
 
-    
         assert True
 
 
 # TODO implement test
 def test_cleanlines():
-    with patch("spellchecker.SpellChecker") as spellchecker_mock, patch(
-        "textblob.TextBlob"
-    ) as textblob_mock,  patch(
+    with patch("spellchecker.SpellChecker") as spellchecker_mock, patch("textblob.TextBlob") as textblob_mock, patch(
         "nltk.corpus.words"
     ) as words_mock:
-        
         # no space needed
         spell = MagicMock()
         spellchecker_mock.return_value = spell
@@ -446,8 +440,6 @@ def test_cleanlines():
         line = "Sentence 3 goes \nhere."
         ret = pc._cleanlines(line)
         assert ret == "Sentence 3 goes here."
-        
-
 
         assert True
 

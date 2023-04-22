@@ -363,23 +363,19 @@ def _cleanlines(line):
     spell = SpellChecker()
     # remove newlines "within words"
     for match in re.finditer(r"([A-Za-z0-9]+)(\r?\n)+([A-Za-z0-9]+)", line):
-
         b1 = TextBlob(match.group(1))
         b2 = TextBlob(match.group(3))
 
         loc = line.find(str(match.group(1) + match.group(2) + match.group(3))) + len(match.group(1))
 
         if (
-                (
-                    match.group(1) == spell.correction(match.group(1))
-                    or match.group(1) == b1.correct()
-                    or match.group(1) in words.words()
-                )
-                and (
-                    match.group(3) == spell.correction(match.group(3))
-                    or match.group(3) == b2.correct()
-                    or match.group(3) in words.words()
-                )
+            match.group(1) == spell.correction(match.group(1))
+            or match.group(1) == b1.correct()
+            or match.group(1) in words.words()
+        ) and (
+            match.group(3) == spell.correction(match.group(3))
+            or match.group(3) == b2.correct()
+            or match.group(3) in words.words()
         ):
             line = list(line)
             line[loc] = " "
@@ -388,7 +384,7 @@ def _cleanlines(line):
             line = list(line)
             line[loc] = ""
             line = ''.join(line)
-    
+
     # remove any remaining newlines
     line = re.sub(r"(\r?\n)+", "", line)
     return line
