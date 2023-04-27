@@ -1,4 +1,5 @@
-# from hello import print_hello
+from .command_line import app
 
-# if __name__ == "__main__":
-#     print_hello()
+
+if __name__ == "__main__":
+    app()

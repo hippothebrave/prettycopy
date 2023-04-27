@@ -10,7 +10,6 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 
 import googleapiclient.discovery
 
-# TODO add to list of reqs
 import nltk
 from nltk import tokenize
 from nltk.corpus import words
@@ -354,12 +353,11 @@ def _getservice(DOCUMENT_ID, SCOPES=None):
     return service
 
 
-# Removes newlines from a sentence,
-# adding a space if it's surrounded by recognizable English words
-# and no space if it isn't.
-# RETURNS NOTHING.
-# TODO that's an anti-pattern imo
 def _cleanlines(line):
+    """
+    Removes newlines from a given line, adding a space if it's surrounded by
+    recognizable English words, and no space if it isn't.
+    """
     spell = SpellChecker()
     # remove newlines "within words"
     for match in re.finditer(r"([A-Za-z0-9]+)(\r?\n)+([A-Za-z0-9]+)", line):
