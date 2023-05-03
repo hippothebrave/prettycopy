@@ -8,8 +8,6 @@ import typer
 
 import pytest
 
-runner = CliRunner()
-
 # TEST
 import nltk
 
@@ -18,6 +16,9 @@ try:
 except LookupError:
     nltk.download("words", quiet=True)
 # \TEST
+
+
+runner = CliRunner()
 
 
 def test_nonewlines():
