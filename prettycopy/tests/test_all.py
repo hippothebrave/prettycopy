@@ -10,6 +10,15 @@ import pytest
 
 runner = CliRunner()
 
+# TEST
+import nltk
+
+try:
+    nltk.data.find('tokenizers/punkt')
+except LookupError:
+    nltk.download("words", quiet=True)
+# \TEST
+
 
 def test_nonewlines():
     with patch("pyperclip.copy") as copy_mock, patch("pyperclip.paste") as paste_mock:
@@ -142,7 +151,6 @@ def test_simplequote():
         assert copy_mock.call_args.args == (ret,)
 
 
-# TODO: check ValueErrors
 def test_quote():
     with patch("pyperclip.copy") as copy_mock, patch("pyperclip.paste") as paste_mock:
         # Bad type
@@ -361,7 +369,6 @@ def test_getservice():
         print_mock.assert_called()
 
 
-# TODO implement test
 def test_smartcopy():
     with patch("pyperclip.copy") as copy_mock, patch("pyperclip.paste") as paste_mock, patch(
         "prettycopy.prettycopy.trimspacing"
@@ -402,7 +409,6 @@ def test_smartcopy():
         assert True
 
 
-# TODO implement test
 def test_cleanlines():
     with patch("spellchecker.SpellChecker") as spellchecker_mock, patch("textblob.TextBlob") as textblob_mock, patch(
         "nltk.corpus.words"

@@ -21,6 +21,11 @@ try:
 except LookupError:
     nltk.download("words", quiet=True)
 
+try:
+    nltk.data.find('tokenizers/punkt')
+except LookupError:
+    nltk.download("words", quiet=True)
+
 
 # PUBLIC FUNCTIONS
 
