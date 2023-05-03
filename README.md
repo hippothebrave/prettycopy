@@ -25,13 +25,23 @@ If you already have Python, just run:
 pip install prettycopy
 ```
 
-### Usage
+## Usage
 
-Copy a piece of text. Run a PrettyCopy function. Now, when you paste, the text will already by corrected. That's all!
+So... how do you use PrettyCopy? It's very simple! You can use PrettyCopy at the command line, or through your own program.
 
-For added flexibility:
+### Command Line
+Copy a piece of text.
+In the command line, type `prettycopy [function_name] [any_args]`. 
+PrettyCopy will print the corrected text, just to show you what your clipboard current contains. 
+Now, as soon as you paste, the text will already be corrected.
 
-You can enter the text as an argument to the function, and PrettyCopy will automatically copy the corrected text to your clipboard. Plus, if you're using PrettyCopy functions through code, the functions return the corrected text as a string.
+If you want, you can add the option `--text "your_text_here"` to the instruction. In this case, PrettyCopy will take your inputted string, correct it, and place it in the clipboard. Remember to add quotation marks around your input string if it contains whitespace. This option can go anywhere as long as the input string is to the right of the --text flag.
+
+Confused? Type `prettycopy --help` to get a list of possible functions, and `prettycopy [function_name] --help` to get help for any particular function.
+
+### In a Program
+PrettyCopy will take in some text, correct it, and copy the corrected text to your clipboard. It will also return the corrected text as a return value, in case you want to keep using it (for example, in a nested function).
+By default, PrettyCopy will run on the text in your clipboard. If you want to correct a different text, enter your preferred text as an argument.
 
 ### Functions
 

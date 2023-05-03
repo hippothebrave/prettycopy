@@ -16,6 +16,8 @@ The more information you give us, the more likely it is that we can find a solut
 ## Developing
 Want to help with development? Even better! Here's how to begin.
 
+(Note: PrettyCopy comes equipped with a Makefile, so you'll be able to simply type 'make [X]' into the command line for a lot of the commands.)
+
 ### Setup
 Prerequisites: Install Python. At the moment, PrettyCopy runs on Python version 3.7 and higher.
 

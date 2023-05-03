@@ -21,6 +21,7 @@ dependencies = [
     "google-api-python-client",
     "nltk",
     "textblob",
+    "typer",
     "pyspellchecker",
 ]
 
@@ -36,6 +37,8 @@ classifiers = [
     "Programming Language :: Python :: 3.11",
 ]
 
+[project.scripts]
+prettycopy = "prettycopy.command_line:app"
 
 [project.license]
 file = "LICENSE"
