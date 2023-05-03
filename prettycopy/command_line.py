@@ -4,6 +4,7 @@ from typing import Optional
 
 app = typer.Typer()
 
+
 @app.command()
 def nonewlines(text: str = ""):
     """
@@ -16,8 +17,9 @@ def nonewlines(text: str = ""):
         else:
             ret = pc.nonewlines()
         print(ret)
-    except:
+    except ValueError:
         print(typer.style("Input should have been a string!", fg="white", bg="red"))
+
 
 @app.command()
 def nobullets(text: str = ""):
@@ -31,13 +33,14 @@ def nobullets(text: str = ""):
         else:
             ret = pc.nobullets()
         print(ret)
-    except:
+    except ValueError:
         print(typer.style("Input should have been a string!", fg="white", bg="red"))
+
 
 @app.command()
 def bullettopar(text: str = ""):
     """
-    Turn text into a paragraph. 
+    Turn text into a paragraph.
     From clipboard or, optionally, --text.
     """
     try:
@@ -46,13 +49,14 @@ def bullettopar(text: str = ""):
         else:
             ret = pc.bullettopar()
         print(ret)
-    except:
+    except ValueError:
         print(typer.style("Input should have been a string!", fg="white", bg="red"))
+
 
 @app.command()
 def simplequote(text: str = ""):
     """
-    Add quotation marks around text. 
+    Add quotation marks around text.
     From clipboard or, optionally, --text.
     """
     try:
@@ -61,8 +65,9 @@ def simplequote(text: str = ""):
         else:
             ret = pc.simplequote()
         print(ret)
-    except:
+    except ValueError:
         print(typer.style("Input should have been a string!", fg="white", bg="red"))
+
 
 @app.command()
 def quote(end_punctuation: Optional[str] = typer.Argument(None), text: str = ""):
@@ -79,10 +84,11 @@ def quote(end_punctuation: Optional[str] = typer.Argument(None), text: str = "")
         ret = pc.quote()
     print(ret)
 
+
 @app.command()
 def trimspacing(text: str = ""):
     """
-    Remove empty lines. 
+    Remove empty lines.
     From clipboard or, optionally, --text.
     """
     try:
@@ -91,13 +97,14 @@ def trimspacing(text: str = ""):
         else:
             ret = pc.trimspacing()
         print(ret)
-    except:
+    except ValueError:
         print(typer.style("Input should have been a string!", fg="white", bg="red"))
+
 
 @app.command()
 def smartcopy(text: str = ""):
     """
-    Remove line breaks in a "smart" manner, preventing words from being split. 
+    Remove line breaks in a "smart" manner, preventing words from being split.
     From clipboard or, optionally, --text.
     """
     try:
@@ -106,8 +113,9 @@ def smartcopy(text: str = ""):
         else:
             ret = pc.smartcopy()
         print(ret)
-    except:
+    except ValueError:
         print(typer.style("Input should have been a string!", fg="white", bg="red"))
+
 
 @app.command()
 def nonewlinequote(text: str = ""):
@@ -121,5 +129,5 @@ def nonewlinequote(text: str = ""):
         else:
             ret = pc.simplequote(pc.nonewlines())
         print(ret)
-    except:
+    except ValueError:
         print(typer.style("Input should have been a string!", fg="white", bg="red"))

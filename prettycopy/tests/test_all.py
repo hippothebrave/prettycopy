@@ -10,6 +10,7 @@ import pytest
 
 runner = CliRunner()
 
+
 def test_nonewlines():
     with patch("pyperclip.copy") as copy_mock, patch("pyperclip.paste") as paste_mock:
         # Bad type
@@ -447,107 +448,109 @@ def test_cleanlines():
 
         assert True
 
+
 # TODO: test for prettycopy.betterbullets
 
-### CLI TESTING
+
+# CLI testing
 def test_app():
     with patch("pyperclip.copy") as copy_mock, patch("pyperclip.paste") as paste_mock:
-        # no new lines 
-            # clipboard input
+        # no new lines
+        # clipboard input
         paste_mock.return_value = "Testing\nsentence one \nhere."
         result = runner.invoke(app, ["nonewlines"])
         assert result.exit_code == 0
         assert result.stdout == "Testing sentence one here." + '\n'
         assert copy_mock.call_args.args == ("Testing sentence one here.",)
-            # text input
+        # text input
         paste_mock.return_value = None
         result = runner.invoke(app, ["nonewlines", "--text", "Testing\nsentence two \nhere."])
         assert result.exit_code == 0
         assert result.stdout == "Testing sentence two here." + '\n'
         assert copy_mock.call_args.args == ("Testing sentence two here.",)
-            # error
+        # error
         paste_mock.return_value = 42
         result = runner.invoke(app, ["nonewlines"])
         assert result.exit_code == 0
         assert result.stdout == typer.style("Input should have been a string!", fg="white", bg="red") + '\n'
 
         # no bullets
-            # clipboard input
+        # clipboard input
         paste_mock.return_value = "•   Te•st• Test"
         result = runner.invoke(app, ["nobullets"])
         assert result.exit_code == 0
         assert result.stdout == "Te\nst\nTest" + '\n'
         assert copy_mock.call_args.args == ("Te\nst\nTest",)
-            # text input - FIXME
+        # text input - FIXME
         # paste_mock.return_value = None
         # result = runner.invoke(app, ["nobullets", "--text", "test"])
         # assert result.exit_code == 0
         # assert result.stdout == "test" + '\n'
         # assert copy_mock.call_args.args == ("test",)
-            # error
+        # error
         paste_mock.return_value = 42
         result = runner.invoke(app, ["nobullets"])
         assert result.exit_code == 0
         assert result.stdout == typer.style("Input should have been a string!", fg="white", bg="red") + '\n'
-    
+
         # bullet to par
-            # clipboard input
+        # clipboard input
         paste_mock.return_value = "Testing\n•sentence\n• one •here."
         result = runner.invoke(app, ["bullettopar"])
         assert result.exit_code == 0
         assert result.stdout == "Testing sentence one here." + '\n'
         assert copy_mock.call_args.args == ("Testing sentence one here.",)
-            # text input
+        # text input
         paste_mock.return_value = None
         result = runner.invoke(app, ["bullettopar", "--text", "Testing\n•sentence\n• two •here."])
         assert result.exit_code == 0
         assert result.stdout == "Testing sentence two here." + '\n'
         assert copy_mock.call_args.args == ("Testing sentence two here.",)
-            # error
+        # error
         paste_mock.return_value = 42
         result = runner.invoke(app, ["bullettopar"])
         assert result.exit_code == 0
         assert result.stdout == typer.style("Input should have been a string!", fg="white", bg="red") + '\n'
 
         # simple quote
-            # clipboard input
+        # clipboard input
         paste_mock.return_value = 'Testing sentence one here.'
         result = runner.invoke(app, ["simplequote"])
         assert result.exit_code == 0
         assert result.stdout == '"Testing sentence one here."' + '\n'
         assert copy_mock.call_args.args == ('"Testing sentence one here."',)
-            # text input
+        # text input
         paste_mock.return_value = None
         result = runner.invoke(app, ["simplequote", "--text", 'Testing sentence two here.'])
         assert result.exit_code == 0
         assert result.stdout == '"Testing sentence two here."' + '\n'
         assert copy_mock.call_args.args == ('"Testing sentence two here."',)
-            # error
+        # error
         paste_mock.return_value = 42
         result = runner.invoke(app, ["simplequote"])
         assert result.exit_code == 0
         assert result.stdout == typer.style("Input should have been a string!", fg="white", bg="red") + '\n'
 
         # quote
-            # clipboard only
+        # clipboard only
         paste_mock.return_value = 'Testing sentence one here'
         result = runner.invoke(app, ["quote"])
         assert result.exit_code == 0
         assert result.stdout == '"Testing sentence one here,"' + '\n'
         assert copy_mock.call_args.args == ('"Testing sentence one here,"',)
-            # text only
+        # text only
         paste_mock.return_value = None
         result = runner.invoke(app, ["quote", "--text", 'Testing sentence two here'])
         assert result.exit_code == 0
         assert result.stdout == '"Testing sentence two here,"' + '\n'
         assert copy_mock.call_args.args == ('"Testing sentence two here,"',)
-            # clipboard + punc only
+        # clipboard + punc only
         paste_mock.return_value = 'Testing sentence three here'
         result = runner.invoke(app, ["quote", "!"])
         assert result.exit_code == 0
         assert result.stdout == '"Testing sentence three here!"' + '\n'
         assert copy_mock.call_args.args == ('"Testing sentence three here!"',)
-            # text + punc
+        # text + punc
         paste_mock.return_value = None
         result = runner.invoke(app, ["quote", "?", "--text", 'Testing sentence four here'])
         assert result.exit_code == 0
@@ -555,60 +558,58 @@ def test_app():
         assert copy_mock.call_args.args == ('"Testing sentence four here?"',)
 
         # trim spacing
-            # clipboard input
+        # clipboard input
         paste_mock.return_value = "Testing\n\nsentence\r\n\r\n one here."
         result = runner.invoke(app, ["trimspacing"])
         assert result.exit_code == 0
         assert result.stdout == "Testing\nsentence\n one here." + '\n'
         assert copy_mock.call_args.args == ("Testing\nsentence\n one here.",)
-            # text input
+        # text input
         paste_mock.return_value = None
         result = runner.invoke(app, ["trimspacing", "--text", "Testing\n\nsentence\r\n\r\n two here."])
         assert result.exit_code == 0
         assert result.stdout == "Testing\nsentence\n two here." + '\n'
         assert copy_mock.call_args.args == ("Testing\nsentence\n two here.",)
-            # error
+        # error
         paste_mock.return_value = 42
         result = runner.invoke(app, ["trimspacing"])
         assert result.exit_code == 0
         assert result.stdout == typer.style("Input should have been a string!", fg="white", bg="red") + '\n'
-        
+
         # smart copy
-            # clipboard input
+        # clipboard input
         paste_mock.return_value = "Testing se\nntence one\nhere."
         result = runner.invoke(app, ["smartcopy"])
         assert result.exit_code == 0
         assert result.stdout == "Testing sentence one here." + '\n'
         assert copy_mock.call_args.args == ("Testing sentence one here.",)
-            # text input
+        # text input
         paste_mock.return_value = None
         result = runner.invoke(app, ["smartcopy", "--text", "Testing se\nntence two\nhere."])
         assert result.exit_code == 0
         assert result.stdout == "Testing sentence two here." + '\n'
         assert copy_mock.call_args.args == ("Testing sentence two here.",)
-            # error
+        # error
         paste_mock.return_value = 42
         result = runner.invoke(app, ["smartcopy"])
         assert result.exit_code == 0
         assert result.stdout == typer.style("Input should have been a string!", fg="white", bg="red") + '\n'
 
         # no new line, quote
-            # clipboard input
+        # clipboard input
         paste_mock.return_value = 'Testing\n sentence one\nhere.'
         result = runner.invoke(app, ["nonewlinequote"])
         assert result.exit_code == 0
         assert result.stdout == '"Testing sentence one here."' + '\n'
         assert copy_mock.call_args.args == ('"Testing sentence one here."',)
-            # text input
+        # text input
         paste_mock.return_value = None
         result = runner.invoke(app, ["nonewlinequote", "--text", 'Testing\n sentence two\nhere.'])
         assert result.exit_code == 0
         assert result.stdout == '"Testing sentence two here."' + '\n'
         assert copy_mock.call_args.args == ('"Testing sentence two here."',)
-            # error
+        # error
         paste_mock.return_value = 42
         result = runner.invoke(app, ["nonewlinequote"])
         assert result.exit_code == 0
         assert result.stdout == typer.style("Input should have been a string!", fg="white", bg="red") + '\n'
-
-        
