@@ -122,20 +122,3 @@ def smartcopy(text: str = "", output: bool = True):
             print(ret)
     except ValueError:
         print(typer.style("Input should have been a string!", fg="white", bg="red"))
-
-
-@app.command()
-def nonewlinequote(text: str = "", output: bool = True):
-    """
-    Removes line breaks from a text, and adds quotation marks around it.
-    From clipboard or, optionally, --text.
-    """
-    try:
-        if text:
-            ret = pc.simplequote(pc.smartcopy(text))
-        else:
-            ret = pc.simplequote(pc.smartcopy())
-        if output:
-            print(ret)
-    except ValueError:
-        print(typer.style("Input should have been a string!", fg="white", bg="red"))
