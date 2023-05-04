@@ -59,18 +59,10 @@ By default, PrettyCopy will run on the text in your clipboard. If you want to co
 
 ### Smart Copy-and-Pase
 
-When copying and pasting between formats, line breaks can appear between, or even within, ordinary words.
+When copying and pasting between formats, line breaks can appear between, or even within, ordinary words. The `smartcopy` function can for the most part distinguish between them, allowing your copy-and-paste experience to be as smooth as possible.
 
 ```{eval-rst}
-.. image:: https://raw.githubusercontent.com/hippothebrave/prettycopy/main/docs/images/smartcopy_pc.gif
-    :width: 700
-    :align: center
-```
-
-The `smartcopy` function can for the most part distinguish between them, allowing your copy-and-paste experience to be as smooth as possible.
-
-```{eval-rst}
-.. autofunction:: prettycopy.prettycopy.smartcopy
+.. autofunction:: prettycopy.smartcopy
 ```
 
 EXAMPLES:
@@ -82,12 +74,12 @@ EXAMPLES:
 ```
 
 ```python
-import prettycopy.prettycopy as pc
+import prettycopy
 # If you have copied the text:
     # Example sen
     # tence goes
     # here.
-pc.smartcopy()
+prettycopy.smartcopy()
 # your clipboard content becomes: 
     # Example sentence goes here.
 ```
@@ -105,7 +97,7 @@ Sometimes you want to copy a piece of text with bullet points. This doesn't alwa
 Using PrettyCopy, you can turn the text into a clean list, or into a single paragraph.
 
 ```{eval-rst}
-.. autofunction:: prettycopy.prettycopy.nobullets
+.. autofunction:: prettycopy.nobullets
 ```
 
 EXAMPLES:
@@ -117,12 +109,12 @@ EXAMPLES:
 ```
 
 ```python
-import prettycopy.prettycopy as pc
+import prettycopy
 # If you have copied the text:
     # • Example
     # • text
     # • here
-pc.nobullets()
+prettycopy.nobullets()
 # your clipboard content becomes: 
     # Example 
     # text 
@@ -132,7 +124,7 @@ pc.nobullets()
 
 
 ```{eval-rst}
-.. autofunction:: prettycopy.prettycopy.bullettopar
+.. autofunction:: prettycopy.bullettopar
 ```
 
 EXAMPLES:
@@ -169,7 +161,7 @@ PrettyCopy has functions to fix that!
 
 
 ```{eval-rst}
-.. autofunction:: prettycopy.prettycopy.nonewlines
+.. autofunction:: prettycopy.nonewlines
 ```
 
 EXAMPLES:
@@ -181,19 +173,19 @@ EXAMPLES:
 ```
 
 ```python
-import prettycopy.prettycopy as pc
+import prettycopy
 # If you have copied the text:
     # Example
     # text
     # here
-pc.nonewlines()
+prettycopy.nonewlines()
 # your clipboard content becomes: 
     # Example text here
 ```
 
 
 ```{eval-rst}
-.. autofunction:: prettycopy.prettycopy.trimspacing
+.. autofunction:: prettycopy.trimspacing
 ```
 
 EXAMPLES:
@@ -205,14 +197,14 @@ EXAMPLES:
 ```
 
 ```python
-import prettycopy.prettycopy as pc
+import prettycopy
 # If you have copied the text:
     # Example 
     # 
     # text 
     # 
     # here
-pc.trimspacing()
+prettycopy.trimspacing()
 # your clipboard content becomes: 
     # Example
     # text 
@@ -234,7 +226,7 @@ PrettyCopy can help!
 
 
 ```{eval-rst}
-.. autofunction:: prettycopy.prettycopy.simplequote
+.. autofunction:: prettycopy.simplequote
 ```
 
 EXAMPLES:
@@ -246,10 +238,10 @@ EXAMPLES:
 ```
 
 ```python
-import prettycopy.prettycopy as pc
+import prettycopy
 # If you have copied the text:
     # Example text here
-pc.simplequote()
+prettycopy.simplequote()
 # your clipboard content becomes: 
     # "Example text here"
 ```
@@ -257,7 +249,7 @@ pc.simplequote()
 
 
 ```{eval-rst}
-.. autofunction:: prettycopy.prettycopy.quote
+.. autofunction:: prettycopy.quote
 ```
 
 EXAMPLES:
@@ -269,16 +261,16 @@ EXAMPLES:
 ```
 
 ```python
-import prettycopy.prettycopy as pc
+import prettycopy
 # If you have copied the text:
     # Example text here
-pc.quote()
+prettycopy.quote()
 # your clipboard content becomes: 
     # "Example text here,"
 
 # If you copy the same text:
     # Example text here
-pc.quote('!')
+prettycopy.quote('!')
 # your clipboard content becomes: 
     # "Example text here!"
 ```
@@ -287,7 +279,7 @@ pc.quote('!')
 
 
 ```{eval-rst}
-.. autofunction:: prettycopy.prettycopy.betterbullets
+.. autofunction:: prettycopy.betterbullets
 ```
 
 (Note: this function is still under development! *Do not use it. It will not work.*)

@@ -22,7 +22,6 @@ dependencies = [
     "nltk",
     "textblob",
     "typer",
-    "pyspellchecker",
 ]
 
 classifiers = [

@@ -250,7 +250,6 @@ def test_trimspacing():
         assert copy_mock.call_args.args == (ret,)
 
 
-# TODO: check that HTTPError is printed in Test 4
 def test_getservice():
     with patch("os.path.exists") as os_mock, patch(
         "google.oauth2.credentials.Credentials.from_authorized_user_file"
@@ -276,7 +275,7 @@ def test_getservice():
         creds_file_mock.return_value = fakecreds1
         # build service
         fakeservice1 = MagicMock()
-        build_mock.return_value = fakeservice1  # FIXME there was an issue here
+        build_mock.return_value = fakeservice1
 
         ret = pc._getservice('1yxH3v4zi82pEMKW41MbZRqKz8JXRbhrb5yJnEdSfJC0')
 
