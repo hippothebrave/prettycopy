@@ -24,7 +24,7 @@ except LookupError:
 try:
     nltk.data.find('tokenizers/punkt')
 except LookupError:
-    nltk.download("words", quiet=True)
+    nltk.download("punkt", quiet=True)
 
 
 # PUBLIC FUNCTIONS
@@ -140,7 +140,7 @@ def simplequote(text=None):
 
 
 def quote(end_punctuation=None, text=None):
-    """Add quotes (and optional comma) around clipboard contents.
+    """Add quotes (and optional punctuation) around clipboard contents.
 
     Adds quotation marks and end punctuation to a text input from the argument or (by default) the clipboard.
 
@@ -171,7 +171,7 @@ def quote(end_punctuation=None, text=None):
             raise ValueError("End punctuation should be one of: [.,!?]")
         text = '"' + smartcopy(text) + end_punctuation + '"'
     else:
-        text = '"' + smartcopy(text) + ',"'
+        text = '"' + smartcopy(text) + '"'
     pyperclip.copy(text)
     return text
 

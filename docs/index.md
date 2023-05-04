@@ -15,7 +15,7 @@ Welcome to PrettyCopy: a beginner-friendly library intended to ensure clean, for
 [![PyPI](https://img.shields.io/pypi/v/prettycopy)](https://pypi.org/project/prettycopy/)
 
 ## Overview
-Copying and pasting text is one of the most commonly-used functionalities we have on our computers. But sometimes, there are formatting issues in the text you're copying that a simple Ctrl+V or Ctrl+Shift+V can't fix.
+Everyone copies and pastes text. But sometimes, there are formatting issues in the text you're copying--and who wants to spend their time correcting format?
 
 Enter PrettyCopy.
 
@@ -36,64 +36,86 @@ So... how do you use PrettyCopy? It's very simple! You can use PrettyCopy at the
 ### Command Line
 Copy a piece of text.
 In the command line, type `prettycopy [function_name] [any_args]`. 
-PrettyCopy will print the corrected text, just to show you what your clipboard current contains. 
-Now, as soon as you paste, the text will already be corrected.
+PrettyCopy will print the (corrected) contents of your clipboard.
+When you paste, the text will already be corrected!
 
-If you want, you can add the option `--text "your_text_here"` to the instruction. In this case, PrettyCopy will take your inputted string, correct it, and place it in the clipboard. Remember to add quotation marks around your input string if it contains whitespace. This option can go anywhere as long as the input string is to the right of the --text flag.
+There are also optional *flags.* 
+`--no-output` will prevent PrettyCopy from copying your clipboard contents to the terminal. (Useful for long inputs.)
+`--text "your_text_here"` allows you to use a command-line string (to the left of the flag, encased in quotation marks) instead of your current clipboard contents. Note that *your clipboard contents will still be replaced*! 
 
 Confused? Type `prettycopy --help` to get a list of possible functions, and `prettycopy [function_name] --help` to get help for any particular function.
 
-<img src="https://raw.githubusercontent.com/hippothebrave/prettycopy/main/docs/images/pchelp.gif" alt= “Example usage of the code” width="25%" height="25%">
+```{eval-rst}
+.. image:: https://raw.githubusercontent.com/hippothebrave/prettycopy/main/docs/images/pchelp.gif
+    :width: 700
+    :align: center
+```
 
 ### In a Program
-PrettyCopy will take in some text, correct it, and copy the corrected text to your clipboard. It will also return the corrected text as a return value, in case you want to keep using it (for example, in a nested function).
+Each PrettyCopy function takes in a string, corrects it, and copies the corrected text to your clipboard. It will also return the corrected text as a return value, in case you want to keep using it (for example, in a nested function).
 By default, PrettyCopy will run on the text in your clipboard. If you want to correct a different text, enter your preferred text as an argument.
 
 ## Functions
 
+### Smart Copy-and-Pase
+
+When copying and pasting between formats, line breaks can appear between, or even within, ordinary words.
+
 ```{eval-rst}
-.. autofunction:: prettycopy.prettycopy.bullettopar
+.. image:: https://raw.githubusercontent.com/hippothebrave/prettycopy/main/docs/images/smartcopy_pc.gif
+    :width: 700
+    :align: center
 ```
 
-EXAMPLE:
+The `smartcopy` function can for the most part distinguish between them, allowing your copy-and-paste experience to be as smooth as possible.
+
+```{eval-rst}
+.. autofunction:: prettycopy.prettycopy.smartcopy
+```
+
+EXAMPLES:
+
+```{eval-rst}
+.. image:: https://raw.githubusercontent.com/hippothebrave/prettycopy/main/docs/images/smartcopy_pc.gif
+    :width: 700
+    :align: center
+```
+
 ```python
 import prettycopy.prettycopy as pc
 # If you have copied the text:
-    # • Example
-    # • text
-    # • here
-pc.bullettopar()
+    # Example sen
+    # tence goes
+    # here.
+pc.smartcopy()
 # your clipboard content becomes: 
-    # Example text here
+    # Example sentence goes here.
 ```
 
-<img src="https://raw.githubusercontent.com/hippothebrave/prettycopy/main/docs/images/pcbullettopar.gif" alt= “Example usage of the code” width="25%" height="25%">
+### Bullet-Point Cleaning
 
+Sometimes you want to copy a piece of text with bullet points. This doesn't always work the way you'd like it to.
 
 ```{eval-rst}
-.. autofunction:: prettycopy.prettycopy.nonewlines
+.. image:: https://raw.githubusercontent.com/hippothebrave/prettycopy/main/docs/images/bullets_nopc.gif
+    :width: 700
+    :align: center
 ```
 
-EXAMPLE:
-```python
-import prettycopy.prettycopy as pc
-# If you have copied the text:
-    # Example
-    # text
-    # here
-pc.nonewlines()
-# your clipboard content becomes: 
-    # Example text here
-```
-
-<img src="https://raw.githubusercontent.com/hippothebrave/prettycopy/main/docs/images/pcnonewlines.gif" alt= “Example usage of the code” width="25%" height="25%">
-
+Using PrettyCopy, you can turn the text into a clean list, or into a single paragraph.
 
 ```{eval-rst}
 .. autofunction:: prettycopy.prettycopy.nobullets
 ```
 
-EXAMPLE:
+EXAMPLES:
+
+```{eval-rst}
+.. image:: https://raw.githubusercontent.com/hippothebrave/prettycopy/main/docs/images/nobullets_pc.gif
+    :width: 700
+    :align: center
+```
+
 ```python
 import prettycopy.prettycopy as pc
 # If you have copied the text:
@@ -107,14 +129,122 @@ pc.nobullets()
     # here
 ```
 
-<img src="https://raw.githubusercontent.com/hippothebrave/prettycopy/main/docs/images/pcnobullets.gif" alt= “Example usage of the code” width="25%" height="25%">
+
+
+```{eval-rst}
+.. autofunction:: prettycopy.prettycopy.bullettopar
+```
+
+EXAMPLES:
+
+```{eval-rst}
+.. image:: https://raw.githubusercontent.com/hippothebrave/prettycopy/main/docs/images/bullettopar_pc.gif
+    :width: 700
+    :align: center
+```
+
+```python
+import prettycopy
+# If you have copied the text:
+    # • Example
+    # • text
+    # • here
+prettycopy.bullettopar()
+# your clipboard content becomes: 
+    # Example text here
+```
+
+
+### Line Break Cleaning
+
+Line breaks also don't always copy over right.
+
+```{eval-rst}
+.. image:: https://raw.githubusercontent.com/hippothebrave/prettycopy/main/docs/images/trimspace_nopc.gif
+    :width: 700
+    :align: center
+```
+
+PrettyCopy has functions to fix that!
+
+
+```{eval-rst}
+.. autofunction:: prettycopy.prettycopy.nonewlines
+```
+
+EXAMPLES:
+
+```{eval-rst}
+.. image:: https://raw.githubusercontent.com/hippothebrave/prettycopy/main/docs/images/pcnonewlines.gif
+    :width: 700
+    :align: center
+```
+
+```python
+import prettycopy.prettycopy as pc
+# If you have copied the text:
+    # Example
+    # text
+    # here
+pc.nonewlines()
+# your clipboard content becomes: 
+    # Example text here
+```
+
+
+```{eval-rst}
+.. autofunction:: prettycopy.prettycopy.trimspacing
+```
+
+EXAMPLES:
+
+```{eval-rst}
+.. image:: https://raw.githubusercontent.com/hippothebrave/prettycopy/main/docs/images/trimspacing_pc.gif
+    :width: 700
+    :align: center
+```
+
+```python
+import prettycopy.prettycopy as pc
+# If you have copied the text:
+    # Example 
+    # 
+    # text 
+    # 
+    # here
+pc.trimspacing()
+# your clipboard content becomes: 
+    # Example
+    # text 
+    # here
+```
+
+
+### Copying Quotes
+
+Ever wanted to copy a quote from a document?
+
+```{eval-rst}
+.. image:: https://raw.githubusercontent.com/hippothebrave/prettycopy/main/docs/images/quotes_nopc.gif
+    :width: 700
+    :align: center
+```
+
+PrettyCopy can help!
 
 
 ```{eval-rst}
 .. autofunction:: prettycopy.prettycopy.simplequote
 ```
 
-EXAMPLE:
+EXAMPLES:
+
+```{eval-rst}
+.. image:: https://raw.githubusercontent.com/hippothebrave/prettycopy/main/docs/images/simplequote_pc.gif
+    :width: 700
+    :align: center
+```
+
 ```python
 import prettycopy.prettycopy as pc
 # If you have copied the text:
@@ -125,11 +255,19 @@ pc.simplequote()
 ```
 
 
+
 ```{eval-rst}
 .. autofunction:: prettycopy.prettycopy.quote
 ```
 
 EXAMPLES:
+
+```{eval-rst}
+.. image:: https://raw.githubusercontent.com/hippothebrave/prettycopy/main/docs/images/quote_pc.gif
+    :width: 700
+    :align: center
+```
+
 ```python
 import prettycopy.prettycopy as pc
 # If you have copied the text:
@@ -145,64 +283,7 @@ pc.quote('!')
     # "Example text here!"
 ```
 
-
-```{eval-rst}
-.. autofunction:: prettycopy.prettycopy.trimspacing
-```
-
-EXAMPLES:
-```python
-import prettycopy.prettycopy as pc
-# If you have copied the text:
-    # Example 
-    # 
-    # text 
-    # 
-    # here
-pc.trimspacing()
-# your clipboard content becomes: 
-    # Example
-    # text 
-    # here
-```
-
-
-```{eval-rst}
-.. autofunction:: prettycopy.prettycopy.trimspacing
-```
-
-EXAMPLES:
-```python
-import prettycopy.prettycopy as pc
-# If you have copied the text:
-    # Example 
-    # 
-    # text 
-    # 
-    # here
-pc.trimspacing()
-# your clipboard content becomes: 
-    # Example
-    # text 
-    # here
-```
-
-
-```{eval-rst}
-.. autofunction:: prettycopy.prettycopy.smartcopy
-```
-
-EXAMPLES:
-```python
-import prettycopy.prettycopy as pc
-# If you have copied the text:
-    # Example sen
-    # tence goes
-    # here.
-pc.smartcopy()
-# your clipboard content becomes: 
-    # Example sentence goes here.
-```
+### Integrations
 
 
 ```{eval-rst}
