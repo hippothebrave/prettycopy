@@ -59,8 +59,7 @@ def test_nobullets():
         paste_mock.return_value = "•Test\n•Test"
         newline_mock.return_value = '•Test •Test'
         ret = pc.nobullets()
-        newline_mock.assert_called_once()
-        assert newline_mock.call_args.args == ()
+        assert newline_mock.call_args.args == ("•Test\n•Test",)
         assert ret == "Test\nTest"
         assert copy_mock.call_args.args == (ret,)
 
@@ -68,7 +67,7 @@ def test_nobullets():
         paste_mock.return_value = "• Test\n• Test"
         newline_mock.return_value = '• Test • Test'
         ret = pc.nobullets()
-        assert newline_mock.call_args.args == ()
+        assert newline_mock.call_args.args == ("• Test\n• Test",)
         assert ret == "Test\nTest"
         assert copy_mock.call_args.args == (ret,)
 
@@ -76,7 +75,7 @@ def test_nobullets():
         paste_mock.return_value = "   • Test\n  •\tTest   •"
         newline_mock.return_value = '• Test • Test •'
         ret = pc.nobullets()
-        assert newline_mock.call_args.args == ()
+        assert newline_mock.call_args.args == ("   • Test\n  •\tTest   •",)
         assert ret == "Test\nTest"
         assert copy_mock.call_args.args == (ret,)
 
@@ -84,14 +83,14 @@ def test_nobullets():
         paste_mock.return_value = "•   Te•st• Test"
         newline_mock.return_value = '• Te•st• Test'
         ret = pc.nobullets()
-        assert newline_mock.call_args.args == ()
+        assert newline_mock.call_args.args == ("•   Te•st• Test",)
         assert ret == "Te\nst\nTest"
         assert copy_mock.call_args.args == (ret,)
 
         # Text from argument
         newline_mock.return_value = '•Another •Test'
         ret = pc.nobullets("•Another\n•Test")
-        assert newline_mock.call_args.args == ()
+        assert newline_mock.call_args.args == ("•Another\n•Test",)
         assert ret == "Another\nTest"
         assert copy_mock.call_args.args == (ret,)
 
@@ -515,11 +514,11 @@ def test_app():
         assert result.stdout == "Te\nst\nTest" + '\n'
         assert copy_mock.call_args.args == ("Te\nst\nTest",)
         # text input - FIXME
-        # paste_mock.return_value = None
-        # result = runner.invoke(app, ["nobullets", "--text", "test"])
-        # assert result.exit_code == 0
-        # assert result.stdout == "test" + '\n'
-        # assert copy_mock.call_args.args == ("test",)
+        paste_mock.return_value = None
+        result = runner.invoke(app, ["nobullets", "--text", "•test"])
+        assert result.exit_code == 0
+        assert result.stdout == "test" + '\n'
+        assert copy_mock.call_args.args == ("test",)
         # error
         paste_mock.return_value = 42
         result = runner.invoke(app, ["nobullets"])

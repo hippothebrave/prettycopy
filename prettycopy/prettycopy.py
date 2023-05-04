@@ -77,7 +77,7 @@ def nobullets(text=None):
     if not isinstance(text, str):
         raise ValueError("PrettyCopy can only take in strings!")
 
-    text = nonewlines().strip("• ")
+    text = nonewlines(text).strip("• ")
     text = re.sub(r"\s*•\s*", "\n", text)
     pyperclip.copy(text)
     return text
