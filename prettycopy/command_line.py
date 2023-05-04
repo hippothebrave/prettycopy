@@ -122,4 +122,3 @@ def smartcopy(text: str = "", output: bool = True):
             print(ret)
     except ValueError:
         print(typer.style("Input should have been a string!", fg="white", bg="red"))
-
