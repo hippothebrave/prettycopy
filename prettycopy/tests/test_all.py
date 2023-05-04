@@ -59,8 +59,7 @@ def test_nobullets():
         paste_mock.return_value = "•Test\n•Test"
         newline_mock.return_value = '•Test •Test'
         ret = pc.nobullets()
-        newline_mock.assert_called_once()
-        assert newline_mock.call_args.args == ()
+        assert newline_mock.call_args.args == ("•Test\n•Test",)
         assert ret == "Test\nTest"
         assert copy_mock.call_args.args == (ret,)
 
@@ -68,7 +67,7 @@ def test_nobullets():
         paste_mock.return_value = "• Test\n• Test"
         newline_mock.return_value = '• Test • Test'
         ret = pc.nobullets()
-        assert newline_mock.call_args.args == ()
+        assert newline_mock.call_args.args == ("• Test\n• Test",)
         assert ret == "Test\nTest"
         assert copy_mock.call_args.args == (ret,)
 
@@ -76,7 +75,7 @@ def test_nobullets():
         paste_mock.return_value = "   • Test\n  •\tTest   •"
         newline_mock.return_value = '• Test • Test •'
         ret = pc.nobullets()
-        assert newline_mock.call_args.args == ()
+        assert newline_mock.call_args.args == ("   • Test\n  •\tTest   •",)
         assert ret == "Test\nTest"
         assert copy_mock.call_args.args == (ret,)
 
@@ -84,14 +83,14 @@ def test_nobullets():
         paste_mock.return_value = "•   Te•st• Test"
         newline_mock.return_value = '• Te•st• Test'
         ret = pc.nobullets()
-        assert newline_mock.call_args.args == ()
+        assert newline_mock.call_args.args == ("•   Te•st• Test",)
         assert ret == "Te\nst\nTest"
         assert copy_mock.call_args.args == (ret,)
 
         # Text from argument
         newline_mock.return_value = '•Another •Test'
         ret = pc.nobullets("•Another\n•Test")
-        assert newline_mock.call_args.args == ()
+        assert newline_mock.call_args.args == ("•Another\n•Test",)
         assert ret == "Another\nTest"
         assert copy_mock.call_args.args == (ret,)
 
@@ -134,61 +133,87 @@ def test_bullettopar():
 
 
 def test_simplequote():
-    with patch("pyperclip.copy") as copy_mock, patch("pyperclip.paste") as paste_mock:
+    with patch("pyperclip.copy") as copy_mock, patch("pyperclip.paste") as paste_mock, patch(
+        "prettycopy.smartcopy"
+    ) as smartcopy_mock:
         # Bad type
         paste_mock.return_value = 77
         with pytest.raises(ValueError):
             ret = pc.simplequote()
 
+        # Already has quotes
+        paste_mock.return_value = '"Test test"'
+        smartcopy_mock.return_value = '"Test test"'
+        ret = pc.simplequote()
+        assert ret == '"Test test"'
+        assert copy_mock.call_args.args == (ret,)
+
         # Argument from clipboard
         paste_mock.return_value = 'Test test'
+        smartcopy_mock.return_value = 'Test test'
         ret = pc.simplequote()
         assert ret == '"Test test"'
         assert copy_mock.call_args.args == (ret,)
 
         # Text from argument
+        smartcopy_mock.return_value = 'Another test'
         ret = pc.simplequote('Another test')
         assert ret == '"Another test"'
         assert copy_mock.call_args.args == (ret,)
 
 
 def test_quote():
-    with patch("pyperclip.copy") as copy_mock, patch("pyperclip.paste") as paste_mock:
+    with patch("pyperclip.copy") as copy_mock, patch("pyperclip.paste") as paste_mock, patch(
+        "prettycopy.smartcopy"
+    ) as smartcopy_mock:
         # Bad type
         paste_mock.return_value = 77
         with pytest.raises(ValueError):
             ret = pc.quote()
 
+        # Already has quotes
+        paste_mock.return_value = '"Test test"'
+        smartcopy_mock.return_value = '"Test test"'
+        ret = pc.quote()
+        assert ret == '"Test test"'
+        assert copy_mock.call_args.args == (ret,)
+
         # No arguments
         paste_mock.return_value = 'Test test'
+        smartcopy_mock.return_value = 'Test test'
         ret = pc.quote()
         assert ret == '"Test test,"'
         assert copy_mock.call_args.args == (ret,)
 
         # Punctuation argument
         paste_mock.return_value = 'Test test'
+        smartcopy_mock.return_value = 'Test test'
         ret = pc.quote('.')
         assert ret == '"Test test."'
         assert copy_mock.call_args.args == (ret,)
 
         # Text argument
+        smartcopy_mock.return_value = 'Another test'
         ret = pc.quote(text='Another test')
         assert ret == '"Another test,"'
         assert copy_mock.call_args.args == (ret,)
 
         # Text and punctuation argument
+        smartcopy_mock.return_value = 'Another test'
         ret = pc.quote('!', 'Another test')
         assert ret == '"Another test!"'
         assert copy_mock.call_args.args == (ret,)
 
         # Incorrect punctuation argument
         paste_mock.return_value = 'Test test'
+        smartcopy_mock.return_value = 'Test test'
         with pytest.raises(ValueError):
             ret = pc.quote('test')
         assert len('test') > 1
 
         # Incorrect punctuation argument
         paste_mock.return_value = 'Test test'
+        smartcopy_mock.return_value = 'Test test'
         with pytest.raises(ValueError):
             ret = pc.quote(';')
         assert ';' not in [',', '.', '!', '?']
@@ -489,11 +514,11 @@ def test_app():
         assert result.stdout == "Te\nst\nTest" + '\n'
         assert copy_mock.call_args.args == ("Te\nst\nTest",)
         # text input - FIXME
-        # paste_mock.return_value = None
-        # result = runner.invoke(app, ["nobullets", "--text", "test"])
-        # assert result.exit_code == 0
-        # assert result.stdout == "test" + '\n'
-        # assert copy_mock.call_args.args == ("test",)
+        paste_mock.return_value = None
+        result = runner.invoke(app, ["nobullets", "--text", "•test"])
+        assert result.exit_code == 0
+        assert result.stdout == "test" + '\n'
+        assert copy_mock.call_args.args == ("test",)
         # error
         paste_mock.return_value = 42
         result = runner.invoke(app, ["nobullets"])

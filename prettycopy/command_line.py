@@ -6,7 +6,7 @@ app = typer.Typer()
 
 
 @app.command()
-def nonewlines(text: str = ""):
+def nonewlines(text: str = "", output: bool = True):
     """
     Remove all lines breaks.
     From the clipboard, or, optionally, --text.
@@ -16,13 +16,14 @@ def nonewlines(text: str = ""):
             ret = pc.nonewlines(text)
         else:
             ret = pc.nonewlines()
-        print(ret)
+        if output:
+            print(ret)
     except ValueError:
         print(typer.style("Input should have been a string!", fg="white", bg="red"))
 
 
 @app.command()
-def nobullets(text: str = ""):
+def nobullets(text: str = "", output: bool = True):
     """
     Remove all line breaks and bullet points.
     From clipboard, or, optionally, --text.
@@ -32,13 +33,14 @@ def nobullets(text: str = ""):
             ret = pc.nobullets(text)
         else:
             ret = pc.nobullets()
-        print(ret)
+        if output:
+            print(ret)
     except ValueError:
         print(typer.style("Input should have been a string!", fg="white", bg="red"))
 
 
 @app.command()
-def bullettopar(text: str = ""):
+def bullettopar(text: str = "", output: bool = True):
     """
     Turn text into a paragraph.
     From clipboard or, optionally, --text.
@@ -48,13 +50,14 @@ def bullettopar(text: str = ""):
             ret = pc.bullettopar(text)
         else:
             ret = pc.bullettopar()
-        print(ret)
+        if output:
+            print(ret)
     except ValueError:
         print(typer.style("Input should have been a string!", fg="white", bg="red"))
 
 
 @app.command()
-def simplequote(text: str = ""):
+def simplequote(text: str = "", output: bool = True):
     """
     Add quotation marks around text.
     From clipboard or, optionally, --text.
@@ -64,13 +67,14 @@ def simplequote(text: str = ""):
             ret = pc.simplequote(text)
         else:
             ret = pc.simplequote()
-        print(ret)
+        if output:
+            print(ret)
     except ValueError:
         print(typer.style("Input should have been a string!", fg="white", bg="red"))
 
 
 @app.command()
-def quote(end_punctuation: Optional[str] = typer.Argument(None), text: str = ""):
+def quote(end_punctuation: Optional[str] = typer.Argument(None), text: str = "", output: bool = True):
     """
     Add quotation marks and punctuation (default comma) to text. Clipboard or optional --text.
     """
@@ -82,11 +86,12 @@ def quote(end_punctuation: Optional[str] = typer.Argument(None), text: str = "")
         ret = pc.quote(text=text)
     else:
         ret = pc.quote()
-    print(ret)
+    if output:
+        print(ret)
 
 
 @app.command()
-def trimspacing(text: str = ""):
+def trimspacing(text: str = "", output: bool = True):
     """
     Remove empty lines.
     From clipboard or, optionally, --text.
@@ -96,13 +101,14 @@ def trimspacing(text: str = ""):
             ret = pc.trimspacing(text)
         else:
             ret = pc.trimspacing()
-        print(ret)
+        if output:
+            print(ret)
     except ValueError:
         print(typer.style("Input should have been a string!", fg="white", bg="red"))
 
 
 @app.command()
-def smartcopy(text: str = ""):
+def smartcopy(text: str = "", output: bool = True):
     """
     Remove line breaks in a "smart" manner, preventing words from being split.
     From clipboard or, optionally, --text.
@@ -112,22 +118,24 @@ def smartcopy(text: str = ""):
             ret = pc.smartcopy(text)
         else:
             ret = pc.smartcopy()
-        print(ret)
+        if output:
+            print(ret)
     except ValueError:
         print(typer.style("Input should have been a string!", fg="white", bg="red"))
 
 
 @app.command()
-def nonewlinequote(text: str = ""):
+def nonewlinequote(text: str = "", output: bool = True):
     """
     Removes line breaks from a text, and adds quotation marks around it.
     From clipboard or, optionally, --text.
     """
     try:
         if text:
-            ret = pc.simplequote(pc.nonewlines(text))
+            ret = pc.simplequote(pc.smartcopy(text))
         else:
-            ret = pc.simplequote(pc.nonewlines())
-        print(ret)
+            ret = pc.simplequote(pc.smartcopy())
+        if output:
+            print(ret)
     except ValueError:
         print(typer.style("Input should have been a string!", fg="white", bg="red"))
