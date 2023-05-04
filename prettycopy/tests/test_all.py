@@ -134,61 +134,87 @@ def test_bullettopar():
 
 
 def test_simplequote():
-    with patch("pyperclip.copy") as copy_mock, patch("pyperclip.paste") as paste_mock:
+    with patch("pyperclip.copy") as copy_mock, patch("pyperclip.paste") as paste_mock, patch(
+        "prettycopy.smartcopy"
+    ) as smartcopy_mock:
         # Bad type
         paste_mock.return_value = 77
         with pytest.raises(ValueError):
             ret = pc.simplequote()
 
+        # Already has quotes
+        paste_mock.return_value = '"Test test"'
+        smartcopy_mock.return_value = '"Test test"'
+        ret = pc.simplequote()
+        assert ret == '"Test test"'
+        assert copy_mock.call_args.args == (ret,)
+
         # Argument from clipboard
         paste_mock.return_value = 'Test test'
+        smartcopy_mock.return_value = 'Test test'
         ret = pc.simplequote()
         assert ret == '"Test test"'
         assert copy_mock.call_args.args == (ret,)
 
         # Text from argument
+        smartcopy_mock.return_value = 'Another test'
         ret = pc.simplequote('Another test')
         assert ret == '"Another test"'
         assert copy_mock.call_args.args == (ret,)
 
 
 def test_quote():
-    with patch("pyperclip.copy") as copy_mock, patch("pyperclip.paste") as paste_mock:
+    with patch("pyperclip.copy") as copy_mock, patch("pyperclip.paste") as paste_mock, patch(
+        "prettycopy.smartcopy"
+    ) as smartcopy_mock:
         # Bad type
         paste_mock.return_value = 77
         with pytest.raises(ValueError):
             ret = pc.quote()
 
+        # Already has quotes
+        paste_mock.return_value = '"Test test"'
+        smartcopy_mock.return_value = '"Test test"'
+        ret = pc.quote()
+        assert ret == '"Test test"'
+        assert copy_mock.call_args.args == (ret,)
+
         # No arguments
         paste_mock.return_value = 'Test test'
+        smartcopy_mock.return_value = 'Test test'
         ret = pc.quote()
         assert ret == '"Test test,"'
         assert copy_mock.call_args.args == (ret,)
 
         # Punctuation argument
         paste_mock.return_value = 'Test test'
+        smartcopy_mock.return_value = 'Test test'
         ret = pc.quote('.')
         assert ret == '"Test test."'
         assert copy_mock.call_args.args == (ret,)
 
         # Text argument
+        smartcopy_mock.return_value = 'Another test'
         ret = pc.quote(text='Another test')
         assert ret == '"Another test,"'
         assert copy_mock.call_args.args == (ret,)
 
         # Text and punctuation argument
+        smartcopy_mock.return_value = 'Another test'
         ret = pc.quote('!', 'Another test')
         assert ret == '"Another test!"'
         assert copy_mock.call_args.args == (ret,)
 
         # Incorrect punctuation argument
         paste_mock.return_value = 'Test test'
+        smartcopy_mock.return_value = 'Test test'
         with pytest.raises(ValueError):
             ret = pc.quote('test')
         assert len('test') > 1
 
         # Incorrect punctuation argument
         paste_mock.return_value = 'Test test'
+        smartcopy_mock.return_value = 'Test test'
         with pytest.raises(ValueError):
             ret = pc.quote(';')
         assert ';' not in [',', '.', '!', '?']

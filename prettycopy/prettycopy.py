@@ -130,7 +130,11 @@ def simplequote(text=None):
     if not isinstance(text, str):
         raise ValueError("PrettyCopy can only take in strings!")
 
-    text = '"' + text + '"'
+    text = text.strip()
+    if text[0] == '"' and text[-1] == '"':
+        return smartcopy(text)
+
+    text = '"' + smartcopy(text) + '"'
     pyperclip.copy(text)
     return text
 
@@ -156,14 +160,18 @@ def quote(end_punctuation=None, text=None):
     if not isinstance(text, str):
         raise ValueError("PrettyCopy can only take in strings!")
 
+    text = text.strip()
+    if text[0] == '"' and text[-1] == '"':
+        return smartcopy(text)
+
     if end_punctuation is not None:
         if len(end_punctuation) != 1:
             raise ValueError("End punctuation should be a single character.")
         elif end_punctuation not in [',', '.', '!', '?']:
             raise ValueError("End punctuation should be one of: [.,!?]")
-        text = '"' + text + end_punctuation + '"'
+        text = '"' + smartcopy(text) + end_punctuation + '"'
     else:
-        text = '"' + text + ',"'
+        text = '"' + smartcopy(text) + ',"'
     pyperclip.copy(text)
     return text
 
