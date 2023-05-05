@@ -30,10 +30,10 @@ except LookupError:
 
 
 def nonewlines(text=None):
-    """Remove all newlines.
+    """Remove all line breaks.
 
-    Takes in a text input from the argument or (by default) the clipboard, removes all newlines,
-    and recopies it to the clipboard.
+    Removes line breaks from a text and recopies to the clipboard.
+    Input comes from either an argument or (by default) the clipboard.
 
     Args:
         text (str): Any text; optional, default None.
@@ -55,11 +55,12 @@ def nonewlines(text=None):
     return text
 
 
-def bullettolist(text=None):
+def nobullets(text=None):
     """Take out old line breaks. Replace bullets with line breaks.
 
-    Takes in a text input from the argument or (by default) the clipboard. Removes all newline symbols,
-    and replaces any bullet symbols with newlines.
+    Removes newline symbols from a text, replacing bullet symbols with line breaks.
+    Recopies to the clipboard.
+    Input comes from either an argument or (by default) the clipboard.
 
     Args:
         text (str): Any text; optional, default None.
@@ -85,8 +86,9 @@ def bullettolist(text=None):
 def bullettopar(text=None):
     """Remove newlines, replace bullets with spaces
 
-    Takes in a text input from the argument or (by default) the clipboard. Removes all newlines,
-    and replaces any bullet symbols with a space.
+    Removes all newlines from a text, replacing any bullet symbols with a space.
+    Recopies to the clipboard.
+    Input comes from either an argument or (by default) the clipboard.
 
     Args:
         text (str): Any text; optional, default None.
@@ -112,7 +114,8 @@ def bullettopar(text=None):
 def simplequote(text=None):
     """Add quotes around clipboard contents.
 
-    Adds quotation marks around a text input from the argument or (by default) the clipboard.
+    Adds quotation marks around a text input. Recopies to the clipboard.
+    Input comes from either an argument or (by default) the clipboard.
 
     Args:
         text (str): Any text; optional, default None.
@@ -141,7 +144,8 @@ def simplequote(text=None):
 def quote(end_punctuation=None, text=None):
     """Add quotes (and optional punctuation) around clipboard contents.
 
-    Adds quotation marks and end punctuation to a text input from the argument or (by default) the clipboard.
+    Adds quotation marks and end punctuation to a text. Recopies to the clipboard.
+    Input comes from either an argument or (by default) the clipboard.
 
     Args:
         end_punctuation (str): A single-character string containing one of: [.,!?]
@@ -178,7 +182,8 @@ def quote(end_punctuation=None, text=None):
 def trimspacing(text=None):
     """Removes empty lines clipboard contents.
 
-    Removes empty lines from a text input from the argument or (by default) the clipboard.
+    Removes empty lines from a text. Recopies to the clipboard.
+    Input comes from either an argument or (by default) the clipboard.
 
     Args:
         text (str): Any text; optional, default None.
@@ -216,7 +221,7 @@ def betterbullets(docID):
 
     """
     # get content
-    text = bullettolist()
+    text = nobullets()
 
     # authenticate so that you can access the google doc
     service = _getservice(docID)
@@ -275,8 +280,10 @@ def betterbullets(docID):
 def smartcopy(text=None):
     """Removes line breaks from clipboard contents in a smart way.
 
-    Removes line breaks--adding a space if a line break splits a word in two, but not
-    if the line break is between words--from a text input from the argument or (by default) the clipboard.
+    Removes line breaks from a text, adding a space if a line break 
+    splits a word in two, but not if the line break is between words.
+    Recopies to the clipboard.
+    Input comes from either an argument or (by default) the clipboard.
 
     Args:
         text (str): Any text; optional, default None.
@@ -367,7 +374,7 @@ def _getservice(DOCUMENT_ID, SCOPES=None):
 
 def _cleanlines(line):
     """
-    Removes newlines from a given line, adding a space if it's surrounded by
+    Removes newline symbols from a given line, adding a space if it's surrounded by
     recognizable English words, and no space if it isn't.
     """
     # remove newlines "within words"
