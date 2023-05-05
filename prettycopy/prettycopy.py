@@ -55,10 +55,10 @@ def nonewlines(text=None):
     return text
 
 
-def nobullets(text=None):
-    """Take out old newlines, replace bullets with newlines.
+def bullettolist(text=None):
+    """Take out old line breaks. Replace bullets with line breaks.
 
-    Takes in a text input from the argument or (by default) the clipboard. Removes all newlines,
+    Takes in a text input from the argument or (by default) the clipboard. Removes all newline symbols,
     and replaces any bullet symbols with newlines.
 
     Args:
@@ -216,7 +216,7 @@ def betterbullets(docID):
 
     """
     # get content
-    text = nobullets()
+    text = bullettolist()
 
     # authenticate so that you can access the google doc
     service = _getservice(docID)

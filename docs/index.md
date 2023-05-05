@@ -4,7 +4,7 @@
 dev_intro.md
 ```
 
-# Welcome to prettycopy's documentation!
+# Welcome to PrettyCopy's documentation!
 
 Welcome to PrettyCopy: a beginner-friendly library intended to ensure clean, format-friendly copy-pasting!
 
@@ -15,7 +15,7 @@ Welcome to PrettyCopy: a beginner-friendly library intended to ensure clean, for
 [![PyPI](https://img.shields.io/pypi/v/prettycopy)](https://pypi.org/project/prettycopy/)
 
 ## Overview
-Everyone copies and pastes text. But sometimes, there are formatting issues in the text you're copying--and who wants to spend their time correcting format?
+Everybody copies and pastes text. But sometimes, there are formatting issues in the text you're copying--and who wants to spend all their time correcting formatting?
 
 Enter PrettyCopy.
 
@@ -35,13 +35,19 @@ So... how do you use PrettyCopy? It's very simple! You can use PrettyCopy at the
 
 ### Command Line
 Copy a piece of text.
+
 In the command line, type `prettycopy [function_name] [any_args]`. 
+
 PrettyCopy will print the (corrected) contents of your clipboard.
+
 When you paste, the text will already be corrected!
 
+
 There are also optional *flags.* 
+
 `--no-output` will prevent PrettyCopy from copying your clipboard contents to the terminal. (Useful for long inputs.)
-`--text "your_text_here"` allows you to use a command-line string (to the left of the flag, encased in quotation marks) instead of your current clipboard contents. Note that *your clipboard contents will still be replaced*! 
+
+`--text "your_text_here"` allows you to use a command-line string (to the right of the flag, encased in quotation marks) instead of your current clipboard contents. Note that *your clipboard contents will still be replaced*! 
 
 Confused? Type `prettycopy --help` to get a list of possible functions, and `prettycopy [function_name] --help` to get help for any particular function.
 
@@ -53,11 +59,12 @@ Confused? Type `prettycopy --help` to get a list of possible functions, and `pre
 
 ### In a Program
 Each PrettyCopy function takes in a string, corrects it, and copies the corrected text to your clipboard. It will also return the corrected text as a return value, in case you want to keep using it (for example, in a nested function).
+
 By default, PrettyCopy will run on the text in your clipboard. If you want to correct a different text, enter your preferred text as an argument.
 
 ## Functions
 
-### Smart Copy-and-Pase
+### Smart Copy-and-Paste
 
 When copying and pasting between formats, line breaks can appear between, or even within, ordinary words. The `smartcopy` function can for the most part distinguish between them, allowing your copy-and-paste experience to be as smooth as possible.
 
@@ -277,12 +284,11 @@ prettycopy.quote('!')
 
 ### Integrations
 
+(Note: this function is still under development! *Do not use it. It will not work.*)
 
 ```{eval-rst}
 .. autofunction:: prettycopy.betterbullets
 ```
-
-(Note: this function is still under development! *Do not use it. It will not work.*)
 
 ## For developers
 
