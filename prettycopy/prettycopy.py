@@ -282,7 +282,7 @@ def smartcopy(text=None):
 
     Removes line breaks from a text.
     Adds a space if a line break is between words or after punctuation,
-    but not if the line break splits a word in two (with or without an 
+    but not if the line break splits a word in two (with or without an
     intemediary dash.)
     Recopies to the clipboard.
     Input comes from either an argument or (by default) the clipboard.
@@ -386,13 +386,9 @@ def _cleanlines(line):
 
         loc = line.find(str(match.group(1) + match.group(2) + match.group(3))) + len(match.group(1))
 
-        if ((
-            match.group(1) == b1.correct()
-            or match.group(1) in words.words()
-        ) and (
-            match.group(3) == b2.correct()
-            or match.group(3) in words.words()
-        )):
+        if (match.group(1) == b1.correct() or match.group(1) in words.words()) and (
+            match.group(3) == b2.correct() or match.group(3) in words.words()
+        ):
             line = list(line)
             line[loc] = " "
             line = ''.join(line)
@@ -400,7 +396,7 @@ def _cleanlines(line):
             line = list(line)
             line[loc] = ""
             line = ''.join(line)
-    
+
     # remove dashes "within words"
     for match in re.finditer(r"([A-Za-z0-9]+)-(\r?\n)+([A-Za-z0-9]+)", line):
         b1 = TextBlob(match.group(1))
@@ -408,13 +404,9 @@ def _cleanlines(line):
 
         loc = match.start() + len(match.group(1))
 
-        if ((
-            match.group(1) == b1.correct()
-            or match.group(1) in words.words()
-        ) and (
-            match.group(3) == b2.correct()
-            or match.group(3) in words.words()
-        )):
+        if (match.group(1) == b1.correct() or match.group(1) in words.words()) and (
+            match.group(3) == b2.correct() or match.group(3) in words.words()
+        ):
             continue
         else:
             line = list(line)

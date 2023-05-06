@@ -435,9 +435,7 @@ def test_smartcopy():
 
 
 def test_cleanlines():
-    with patch("textblob.TextBlob") as textblob_mock, patch(
-        "nltk.corpus.words"
-    ) as words_mock:
+    with patch("textblob.TextBlob") as textblob_mock, patch("nltk.corpus.words") as words_mock:
         # no space needed
         b1 = MagicMock()
         b1.correct = MagicMock()
