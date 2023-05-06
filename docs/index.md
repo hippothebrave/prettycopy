@@ -104,13 +104,13 @@ Sometimes you want to copy a piece of text with bullet points. This doesn't alwa
 Using PrettyCopy, you can turn the text into a clean list, or into a single paragraph.
 
 ```{eval-rst}
-.. autofunction:: prettycopy.nobullets
+.. autofunction:: prettycopy.bullettolist
 ```
 
 EXAMPLES:
 
 ```{eval-rst}
-.. image:: https://raw.githubusercontent.com/hippothebrave/prettycopy/main/docs/images/nobullets_pc.gif
+.. image:: https://raw.githubusercontent.com/hippothebrave/prettycopy/main/docs/images/bullettolist_pc.gif
     :width: 700
     :align: center
 ```
@@ -121,7 +121,7 @@ import prettycopy
     # • Example
     # • text
     # • here
-prettycopy.nobullets()
+prettycopy.bullettolist()
 # your clipboard content becomes: 
     # Example 
     # text 

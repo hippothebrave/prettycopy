@@ -23,16 +23,16 @@ def nonewlines(text: str = "", output: bool = True):
 
 
 @app.command()
-def nobullets(text: str = "", output: bool = True):
+def bullettolist(text: str = "", output: bool = True):
     """
     Remove all line breaks and bullet points.
     From clipboard, or, optionally, --text.
     """
     try:
         if text:
-            ret = pc.nobullets(text)
+            ret = pc.bullettolist(text)
         else:
-            ret = pc.nobullets()
+            ret = pc.bullettolist()
         if output:
             print(ret)
     except ValueError:

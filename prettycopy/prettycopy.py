@@ -55,7 +55,7 @@ def nonewlines(text=None):
     return text
 
 
-def nobullets(text=None):
+def bullettolist(text=None):
     """Take out old line breaks. Replace bullets with line breaks.
 
     Removes newline symbols from a text, replacing bullet symbols with line breaks.
@@ -221,7 +221,7 @@ def betterbullets(docID):
 
     """
     # get content
-    text = nobullets()
+    text = bullettolist()
 
     # authenticate so that you can access the google doc
     service = _getservice(docID)
@@ -280,8 +280,10 @@ def betterbullets(docID):
 def smartcopy(text=None):
     """Removes line breaks from clipboard contents in a smart way.
 
-    Removes line breaks from a text, adding a space if a line break 
-    splits a word in two, but not if the line break is between words.
+    Removes line breaks from a text.
+    Adds a space if a line break is between words or after punctuation,
+    but not if the line break splits a word in two (with or without an 
+    intemediary dash.)
     Recopies to the clipboard.
     Input comes from either an argument or (by default) the clipboard.
 

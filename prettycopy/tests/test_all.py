@@ -46,19 +46,19 @@ def test_nonewlines():
         assert copy_mock.call_args.args == (ret,)
 
 
-def test_nobullets():
+def test_bullettolist():
     with patch("pyperclip.copy") as copy_mock, patch("pyperclip.paste") as paste_mock, patch(
         "prettycopy.prettycopy.nonewlines"
     ) as newline_mock:
         # Bad type
         paste_mock.return_value = 42
         with pytest.raises(ValueError):
-            ret = pc.nobullets()
+            ret = pc.bullettolist()
 
         # No spaces
         paste_mock.return_value = "•Test\n•Test"
         newline_mock.return_value = '•Test •Test'
-        ret = pc.nobullets()
+        ret = pc.bullettolist()
         assert newline_mock.call_args.args == ("•Test\n•Test",)
         assert ret == "Test\nTest"
         assert copy_mock.call_args.args == (ret,)
@@ -66,7 +66,7 @@ def test_nobullets():
         # Spaces between bullet and text
         paste_mock.return_value = "• Test\n• Test"
         newline_mock.return_value = '• Test • Test'
-        ret = pc.nobullets()
+        ret = pc.bullettolist()
         assert newline_mock.call_args.args == ("• Test\n• Test",)
         assert ret == "Test\nTest"
         assert copy_mock.call_args.args == (ret,)
@@ -74,7 +74,7 @@ def test_nobullets():
         # Spaces around bullet and text
         paste_mock.return_value = "   • Test\n  •\tTest   •"
         newline_mock.return_value = '• Test • Test •'
-        ret = pc.nobullets()
+        ret = pc.bullettolist()
         assert newline_mock.call_args.args == ("   • Test\n  •\tTest   •",)
         assert ret == "Test\nTest"
         assert copy_mock.call_args.args == (ret,)
@@ -82,14 +82,14 @@ def test_nobullets():
         # Bullets within words
         paste_mock.return_value = "•   Te•st• Test"
         newline_mock.return_value = '• Te•st• Test'
-        ret = pc.nobullets()
+        ret = pc.bullettolist()
         assert newline_mock.call_args.args == ("•   Te•st• Test",)
         assert ret == "Te\nst\nTest"
         assert copy_mock.call_args.args == (ret,)
 
         # Text from argument
         newline_mock.return_value = '•Another •Test'
-        ret = pc.nobullets("•Another\n•Test")
+        ret = pc.bullettolist("•Another\n•Test")
         assert newline_mock.call_args.args == ("•Another\n•Test",)
         assert ret == "Another\nTest"
         assert copy_mock.call_args.args == (ret,)
@@ -519,24 +519,24 @@ def test_app():
         # no bullets
         # clipboard input
         paste_mock.return_value = "•   Te•st• Test"
-        result = runner.invoke(app, ["nobullets"])
+        result = runner.invoke(app, ["bullettolist"])
         assert result.exit_code == 0
         assert result.stdout == "Te\nst\nTest" + '\n'
         assert copy_mock.call_args.args == ("Te\nst\nTest",)
         # text input
         paste_mock.return_value = None
-        result = runner.invoke(app, ["nobullets", "--text", "•test"])
+        result = runner.invoke(app, ["bullettolist", "--text", "•test"])
         assert result.exit_code == 0
         assert result.stdout == "test" + '\n'
         assert copy_mock.call_args.args == ("test",)
         # error
         paste_mock.return_value = 42
-        result = runner.invoke(app, ["nobullets"])
+        result = runner.invoke(app, ["bullettolist"])
         assert result.exit_code == 0
         assert result.stdout == typer.style("Input should have been a string!", fg="white", bg="red") + '\n'
         # no-output
         paste_mock.return_value = "•   Te•st• Test"
-        result = runner.invoke(app, ["nobullets", "--no-output"])
+        result = runner.invoke(app, ["bullettolist", "--no-output"])
         assert result.exit_code == 0
         assert result.stdout == ''
         assert copy_mock.call_args.args == ("Te\nst\nTest",)
