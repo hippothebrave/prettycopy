@@ -398,7 +398,29 @@ def _cleanlines(line):
             line = list(line)
             line[loc] = ""
             line = ''.join(line)
+    
+    # remove dashes "within words"
+    for match in re.finditer(r"([A-Za-z0-9]+)-(\r?\n)+([A-Za-z0-9]+)", line):
+        b1 = TextBlob(match.group(1))
+        b2 = TextBlob(match.group(3))
+
+        loc = match.start() + len(match.group(1))
+
+        if ((
+            match.group(1) == b1.correct()
+            or match.group(1) in words.words()
+        ) and (
+            match.group(3) == b2.correct()
+            or match.group(3) in words.words()
+        )):
+            continue
+        else:
+            line = list(line)
+            print(line[loc])
+            line[loc] = ""
+            line = ''.join(line)
 
     # remove any remaining newlines
+    line = re.sub(r"([.,;!?%\"])+(\r?\n)+", r"\1 ", line)
     line = re.sub(r"(\r?\n)+", "", line)
     return line

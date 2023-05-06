@@ -435,14 +435,10 @@ def test_smartcopy():
 
 
 def test_cleanlines():
-    with patch("spellchecker.SpellChecker") as spellchecker_mock, patch("textblob.TextBlob") as textblob_mock, patch(
+    with patch("textblob.TextBlob") as textblob_mock, patch(
         "nltk.corpus.words"
     ) as words_mock:
         # no space needed
-        spell = MagicMock()
-        spellchecker_mock.return_value = spell
-        spell.correction = MagicMock()
-        spell.correction.side_effect = ["sent", "nice", "go", "is"]
         b1 = MagicMock()
         b1.correct = MagicMock()
         b2 = MagicMock()
@@ -456,10 +452,6 @@ def test_cleanlines():
         assert ret == "Sentence 1 goes here."
 
         # space needed
-        spell = MagicMock()
-        spellchecker_mock.return_value = spell
-        spell.correction = MagicMock()
-        spell.correction.side_effect = ["goes", "here"]
         b1 = MagicMock()
         b1.correct = MagicMock()
         b2 = MagicMock()
@@ -471,6 +463,19 @@ def test_cleanlines():
         line = "Sentence 2 goes\nhere."
         ret = pc._cleanlines(line)
         assert ret == "Sentence 2 goes here."
+
+        # space needed 2
+        b1 = MagicMock()
+        b1.correct = MagicMock()
+        b2 = MagicMock()
+        b2.correct = MagicMock()
+        textblob_mock.side_effect = [b1, b2]
+        b1.correct.side_effect = ["so"]
+        b2.correct.side_effect = ["tense"]
+        words_mock.return_value = False
+        line = "Se-\r\nntence 3 goes here."
+        ret = pc._cleanlines(line)
+        assert ret == "Sentence 3 goes here."
 
         # newline not within a word
         line = "Sentence 3 goes \nhere."
