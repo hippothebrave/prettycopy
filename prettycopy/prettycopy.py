@@ -14,7 +14,6 @@ import nltk
 from nltk import tokenize
 from nltk.corpus import words
 from textblob import TextBlob
-from spellchecker import SpellChecker
 
 try:
     nltk.data.find('tokenizers/words')
@@ -31,10 +30,10 @@ except LookupError:
 
 
 def nonewlines(text=None):
-    """Remove all newlines.
+    """Remove all line breaks.
 
-    Takes in a text input from the argument or (by default) the clipboard, removes all newlines,
-    and recopies it to the clipboard.
+    Removes line breaks from a text and recopies to the clipboard.
+    Input comes from either an argument or (by default) the clipboard.
 
     Args:
         text (str): Any text; optional, default None.
@@ -56,11 +55,12 @@ def nonewlines(text=None):
     return text
 
 
-def nobullets(text=None):
-    """Take out old newlines, replace bullets with newlines.
+def bullettolist(text=None):
+    """Take out old line breaks. Replace bullets with line breaks.
 
-    Takes in a text input from the argument or (by default) the clipboard. Removes all newlines,
-    and replaces any bullet symbols with newlines.
+    Removes newline symbols from a text, replacing bullet symbols with line breaks.
+    Recopies to the clipboard.
+    Input comes from either an argument or (by default) the clipboard.
 
     Args:
         text (str): Any text; optional, default None.
@@ -86,8 +86,9 @@ def nobullets(text=None):
 def bullettopar(text=None):
     """Remove newlines, replace bullets with spaces
 
-    Takes in a text input from the argument or (by default) the clipboard. Removes all newlines,
-    and replaces any bullet symbols with a space.
+    Removes all newlines from a text, replacing any bullet symbols with a space.
+    Recopies to the clipboard.
+    Input comes from either an argument or (by default) the clipboard.
 
     Args:
         text (str): Any text; optional, default None.
@@ -113,7 +114,8 @@ def bullettopar(text=None):
 def simplequote(text=None):
     """Add quotes around clipboard contents.
 
-    Adds quotation marks around a text input from the argument or (by default) the clipboard.
+    Adds quotation marks around a text input. Recopies to the clipboard.
+    Input comes from either an argument or (by default) the clipboard.
 
     Args:
         text (str): Any text; optional, default None.
@@ -142,7 +144,8 @@ def simplequote(text=None):
 def quote(end_punctuation=None, text=None):
     """Add quotes (and optional punctuation) around clipboard contents.
 
-    Adds quotation marks and end punctuation to a text input from the argument or (by default) the clipboard.
+    Adds quotation marks and end punctuation to a text. Recopies to the clipboard.
+    Input comes from either an argument or (by default) the clipboard.
 
     Args:
         end_punctuation (str): A single-character string containing one of: [.,!?]
@@ -179,7 +182,8 @@ def quote(end_punctuation=None, text=None):
 def trimspacing(text=None):
     """Removes empty lines clipboard contents.
 
-    Removes empty lines from a text input from the argument or (by default) the clipboard.
+    Removes empty lines from a text. Recopies to the clipboard.
+    Input comes from either an argument or (by default) the clipboard.
 
     Args:
         text (str): Any text; optional, default None.
@@ -217,7 +221,7 @@ def betterbullets(docID):
 
     """
     # get content
-    text = nobullets()
+    text = bullettolist()
 
     # authenticate so that you can access the google doc
     service = _getservice(docID)
@@ -276,8 +280,12 @@ def betterbullets(docID):
 def smartcopy(text=None):
     """Removes line breaks from clipboard contents in a smart way.
 
-    Removes line breaks--adding a space if a line break splits a word in two, but not
-    if the line break is between words--from a text input from the argument or (by default) the clipboard.
+    Removes line breaks from a text.
+    Adds a space if a line break is between words or after punctuation,
+    but not if the line break splits a word in two (with or without an
+    intemediary dash.)
+    Recopies to the clipboard.
+    Input comes from either an argument or (by default) the clipboard.
 
     Args:
         text (str): Any text; optional, default None.
@@ -368,10 +376,9 @@ def _getservice(DOCUMENT_ID, SCOPES=None):
 
 def _cleanlines(line):
     """
-    Removes newlines from a given line, adding a space if it's surrounded by
+    Removes newline symbols from a given line, adding a space if it's surrounded by
     recognizable English words, and no space if it isn't.
     """
-    spell = SpellChecker()
     # remove newlines "within words"
     for match in re.finditer(r"([A-Za-z0-9]+)(\r?\n)+([A-Za-z0-9]+)", line):
         b1 = TextBlob(match.group(1))
@@ -379,14 +386,8 @@ def _cleanlines(line):
 
         loc = line.find(str(match.group(1) + match.group(2) + match.group(3))) + len(match.group(1))
 
-        if (
-            match.group(1) == spell.correction(match.group(1))
-            or match.group(1) == b1.correct()
-            or match.group(1) in words.words()
-        ) and (
-            match.group(3) == spell.correction(match.group(3))
-            or match.group(3) == b2.correct()
-            or match.group(3) in words.words()
+        if (match.group(1) == b1.correct() or match.group(1) in words.words()) and (
+            match.group(3) == b2.correct() or match.group(3) in words.words()
         ):
             line = list(line)
             line[loc] = " "
@@ -396,6 +397,24 @@ def _cleanlines(line):
             line[loc] = ""
             line = ''.join(line)
 
+    # remove dashes "within words"
+    for match in re.finditer(r"([A-Za-z0-9]+)-(\r?\n)+([A-Za-z0-9]+)", line):
+        b1 = TextBlob(match.group(1))
+        b2 = TextBlob(match.group(3))
+
+        loc = match.start() + len(match.group(1))
+
+        if (match.group(1) == b1.correct() or match.group(1) in words.words()) and (
+            match.group(3) == b2.correct() or match.group(3) in words.words()
+        ):
+            continue
+        else:
+            line = list(line)
+            print(line[loc])
+            line[loc] = ""
+            line = ''.join(line)
+
     # remove any remaining newlines
+    line = re.sub(r"([.,;!?%\"])+(\r?\n)+", r"\1 ", line)
     line = re.sub(r"(\r?\n)+", "", line)
     return line

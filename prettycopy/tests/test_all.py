@@ -46,19 +46,19 @@ def test_nonewlines():
         assert copy_mock.call_args.args == (ret,)
 
 
-def test_nobullets():
+def test_bullettolist():
     with patch("pyperclip.copy") as copy_mock, patch("pyperclip.paste") as paste_mock, patch(
         "prettycopy.prettycopy.nonewlines"
     ) as newline_mock:
         # Bad type
         paste_mock.return_value = 42
         with pytest.raises(ValueError):
-            ret = pc.nobullets()
+            ret = pc.bullettolist()
 
         # No spaces
         paste_mock.return_value = "•Test\n•Test"
         newline_mock.return_value = '•Test •Test'
-        ret = pc.nobullets()
+        ret = pc.bullettolist()
         assert newline_mock.call_args.args == ("•Test\n•Test",)
         assert ret == "Test\nTest"
         assert copy_mock.call_args.args == (ret,)
@@ -66,7 +66,7 @@ def test_nobullets():
         # Spaces between bullet and text
         paste_mock.return_value = "• Test\n• Test"
         newline_mock.return_value = '• Test • Test'
-        ret = pc.nobullets()
+        ret = pc.bullettolist()
         assert newline_mock.call_args.args == ("• Test\n• Test",)
         assert ret == "Test\nTest"
         assert copy_mock.call_args.args == (ret,)
@@ -74,7 +74,7 @@ def test_nobullets():
         # Spaces around bullet and text
         paste_mock.return_value = "   • Test\n  •\tTest   •"
         newline_mock.return_value = '• Test • Test •'
-        ret = pc.nobullets()
+        ret = pc.bullettolist()
         assert newline_mock.call_args.args == ("   • Test\n  •\tTest   •",)
         assert ret == "Test\nTest"
         assert copy_mock.call_args.args == (ret,)
@@ -82,14 +82,14 @@ def test_nobullets():
         # Bullets within words
         paste_mock.return_value = "•   Te•st• Test"
         newline_mock.return_value = '• Te•st• Test'
-        ret = pc.nobullets()
+        ret = pc.bullettolist()
         assert newline_mock.call_args.args == ("•   Te•st• Test",)
         assert ret == "Te\nst\nTest"
         assert copy_mock.call_args.args == (ret,)
 
         # Text from argument
         newline_mock.return_value = '•Another •Test'
-        ret = pc.nobullets("•Another\n•Test")
+        ret = pc.bullettolist("•Another\n•Test")
         assert newline_mock.call_args.args == ("•Another\n•Test",)
         assert ret == "Another\nTest"
         assert copy_mock.call_args.args == (ret,)
@@ -250,7 +250,6 @@ def test_trimspacing():
         assert copy_mock.call_args.args == (ret,)
 
 
-# TODO: check that HTTPError is printed in Test 4
 def test_getservice():
     with patch("os.path.exists") as os_mock, patch(
         "google.oauth2.credentials.Credentials.from_authorized_user_file"
@@ -276,7 +275,7 @@ def test_getservice():
         creds_file_mock.return_value = fakecreds1
         # build service
         fakeservice1 = MagicMock()
-        build_mock.return_value = fakeservice1  # FIXME there was an issue here
+        build_mock.return_value = fakeservice1
 
         ret = pc._getservice('1yxH3v4zi82pEMKW41MbZRqKz8JXRbhrb5yJnEdSfJC0')
 
@@ -436,14 +435,8 @@ def test_smartcopy():
 
 
 def test_cleanlines():
-    with patch("spellchecker.SpellChecker") as spellchecker_mock, patch("textblob.TextBlob") as textblob_mock, patch(
-        "nltk.corpus.words"
-    ) as words_mock:
+    with patch("textblob.TextBlob") as textblob_mock, patch("nltk.corpus.words") as words_mock:
         # no space needed
-        spell = MagicMock()
-        spellchecker_mock.return_value = spell
-        spell.correction = MagicMock()
-        spell.correction.side_effect = ["sent", "nice", "go", "is"]
         b1 = MagicMock()
         b1.correct = MagicMock()
         b2 = MagicMock()
@@ -457,10 +450,6 @@ def test_cleanlines():
         assert ret == "Sentence 1 goes here."
 
         # space needed
-        spell = MagicMock()
-        spellchecker_mock.return_value = spell
-        spell.correction = MagicMock()
-        spell.correction.side_effect = ["goes", "here"]
         b1 = MagicMock()
         b1.correct = MagicMock()
         b2 = MagicMock()
@@ -472,6 +461,19 @@ def test_cleanlines():
         line = "Sentence 2 goes\nhere."
         ret = pc._cleanlines(line)
         assert ret == "Sentence 2 goes here."
+
+        # space needed 2
+        b1 = MagicMock()
+        b1.correct = MagicMock()
+        b2 = MagicMock()
+        b2.correct = MagicMock()
+        textblob_mock.side_effect = [b1, b2]
+        b1.correct.side_effect = ["so"]
+        b2.correct.side_effect = ["tense"]
+        words_mock.return_value = False
+        line = "Se-\r\nntence 3 goes here."
+        ret = pc._cleanlines(line)
+        assert ret == "Sentence 3 goes here."
 
         # newline not within a word
         line = "Sentence 3 goes \nhere."
@@ -515,24 +517,24 @@ def test_app():
         # no bullets
         # clipboard input
         paste_mock.return_value = "•   Te•st• Test"
-        result = runner.invoke(app, ["nobullets"])
+        result = runner.invoke(app, ["bullettolist"])
         assert result.exit_code == 0
         assert result.stdout == "Te\nst\nTest" + '\n'
         assert copy_mock.call_args.args == ("Te\nst\nTest",)
         # text input
         paste_mock.return_value = None
-        result = runner.invoke(app, ["nobullets", "--text", "•test"])
+        result = runner.invoke(app, ["bullettolist", "--text", "•test"])
         assert result.exit_code == 0
         assert result.stdout == "test" + '\n'
         assert copy_mock.call_args.args == ("test",)
         # error
         paste_mock.return_value = 42
-        result = runner.invoke(app, ["nobullets"])
+        result = runner.invoke(app, ["bullettolist"])
         assert result.exit_code == 0
         assert result.stdout == typer.style("Input should have been a string!", fg="white", bg="red") + '\n'
         # no-output
         paste_mock.return_value = "•   Te•st• Test"
-        result = runner.invoke(app, ["nobullets", "--no-output"])
+        result = runner.invoke(app, ["bullettolist", "--no-output"])
         assert result.exit_code == 0
         assert result.stdout == ''
         assert copy_mock.call_args.args == ("Te\nst\nTest",)
