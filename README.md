@@ -44,3 +44,11 @@ Confused? Type `prettycopy --help` to get a list of possible functions, and `pre
 ### In a Program
 PrettyCopy will take in some text, correct it, and copy the corrected text to your clipboard. It will also return the corrected text as a return value, in case you want to keep using it (for example, in a nested function).
 By default, PrettyCopy will run on the text in your clipboard. If you want to correct a different text, enter your preferred text as an argument.
+
+## Examples
+PrettyCopy can be used for fixing issues with line breaks; removing extraneous bullet point symbols; adding quotation marks (and optional punctuation) around a copied text; and more! 
+
+![](https://github.com/hippothebrave/prettycopy/blob/main/docs/images/smartcopy_pc.gif)
+
+See the [documentation](https://prettycopy.readthedocs.io/en/latest/) for the complete list of functions.
+
