@@ -207,9 +207,11 @@ def trimspacing(text=None):
     return text
 
 
-# FIXME: only works if you have the document ID
-# FIXME: only pastes at end of document
-def betterbullets(docID):
+# FIXME: requires quite a lot of user effort
+# special thanks to https://stackoverflow.com/questions/38388232/convert-paragraph-or-text-element-to-list-item-in-gas
+# https://developers.google.com/apps-script/api/quickstart/python
+
+def betterbullets(docID, scriptID = None):
     """Add clipboard content to end of Google Doc as a bulleted list.
 
     Takes text from the clipboard. Removes all newlines and replaces bullet symbols with newlines.
@@ -223,60 +225,112 @@ def betterbullets(docID):
 
     """
     # get content
-    text = bullettolist()
+    text = bullettolist().splitlines()
+    assert isinstance(text, list)
+    print(text)
 
     # authenticate so that you can access the google doc
-    service = _getservice(docID)
+    docservice, service = _getservice(docID)
 
-    # find end of current google doc content
-    document = service.documents().get(documentId=docID).execute()
-    doclines = document.get('body')['content']
-    content = ""
-    for line in doclines[1:]:
-        content += line['paragraph']['elements'][0]['textRun']['content']
-    startIndex = len(content)
+    # set up the project (TODO check if project already exists)
+    if(scriptID is None):
+        scriptID = _makescript(docID)
+        print("""
+        Go to the newly-made project using Apps Script.
+        In 'Settings,' set the project number to 1005617561214.
+        Then add a new API executable deployment.
+        The 'deployment number' is your new Script ID. 
+        Using that, run this function again!
+        (Sorry, I don't know a less inconvenient way to do this...)
+        """)
+        return
 
-    # paste the content onto the google doc
-    payload = {
-        "requests": [{"insertText": {"text": text, "endOfSegmentLocation": {"segmentId": ""}}}],
-        "writeControl": {},
+    # run the script
+    request = {
+        "function": "betterbullets",
+        "parameters": text
     }
-
-    request = service.documents().batchUpdate(documentId=docID, body=payload)
     try:
-        response = request.execute()
+        response = service.scripts().run(scriptId=scriptID, body=request).execute()
+        print("Executed!")
+        print(response)
+        if 'error' in response:
+            error = response['error']['details'][0]
+            print(f"Script error message: {0}.{format(error['errorMessage'])}")
     except HttpError as e:
         print('Error response status code : {0}, reason : {1}'.format(e.status_code, e.error_details))
+        print("Entire error:", e)
+        return
 
-    # find end of current google doc content
-    document = service.documents().get(documentId=docID).execute()
-    doclines = document.get('body')['content']
-    content = ""
-    for line in doclines[1:]:
-        content += line['paragraph']['elements'][0]['textRun']['content']
-    endIndex = len(content)
+# TO INSERT AT END OF DOC ONLY:
+# def betterbullets2(docID):
+    # """Add clipboard content to end of Google Doc as a bulleted list.
 
-    # make post request, turning pasted content into bulleted list
-    payload = {
-        "requests": [
-            {
-                "createParagraphBullets": {
-                    "bulletPreset": "BULLET_DISC_CIRCLE_SQUARE",
-                    "range": {"startIndex": startIndex + 1, "endIndex": endIndex, "segmentId": ""},
-                }
-            }
-        ],
-        "writeControl": {},
-    }
+    # Takes text from the clipboard. Removes all newlines and replaces bullet symbols with newlines.
+    # Copies the text to the end of a Google Doc as a bulleted list.
 
-    request = service.documents().batchUpdate(documentId=docID, body=payload)
-    try:
-        response = request.execute()  # noqa: F841
-    except HttpError as e:
-        print('Error response status code : {0}, reason : {1}'.format(e.status_code, e.error_details))
+    # Args:
+    #     docID (str): The ID of a Google Doc.
 
-    # return
-    return text
+    # Returns:
+    #     str: Corrected text.
+
+    # """
+#     # get content
+#     text = bullettolist()
+
+#     # authenticate so that you can access the google doc
+#     docservice, scriptservice = _getservice(docID)
+
+    # # find end of current google doc content
+    # document = docservice.documents().get(documentId=docID).execute()
+    # doclines = document.get('body')['content']
+    # content = ""
+    # for line in doclines[1:]:
+    #     content += line['paragraph']['elements'][0]['textRun']['content']
+    # startIndex = len(content)
+
+    # # paste the content onto the google doc
+    # payload = {
+    #     "requests": [{"insertText": {"text": text, "endOfSegmentLocation": {"segmentId": ""}}}],
+    #     "writeControl": {},
+    # }
+
+    # request = docservice.documents().batchUpdate(documentId=docID, body=payload)
+    # try:
+    #     response = request.execute()
+    # except HttpError as e:
+    #     print('Error response status code : {0}, reason : {1}'.format(e.status_code, e.error_details))
+
+    # # find end of new current google doc content
+    # document = docservice.documents().get(documentId=docID).execute()
+    # doclines = document.get('body')['content']
+    # content = ""
+    # for line in doclines[1:]:
+    #     content += line['paragraph']['elements'][0]['textRun']['content']
+    # endIndex = len(content)
+
+    # # make post request, turning pasted content into bulleted list
+    # payload = {
+    #     "requests": [
+    #         {
+    #             "createParagraphBullets": {
+    #                 "bulletPreset": "BULLET_DISC_CIRCLE_SQUARE",
+    #                 "range": {"startIndex": startIndex + 1, "endIndex": endIndex, "segmentId": ""},
+    #             }
+    #         }
+    #     ],
+    #     "writeControl": {},
+    # }
+
+    # request = docservice.documents().batchUpdate(documentId=docID, body=payload)
+    # try:
+    #     response = request.execute()  # noqa: F841
+    # except HttpError as e:
+    #     print('Error response status code : {0}, reason : {1}'.format(e.status_code, e.error_details))
+
+    # # return
+    # return text
 
 
 def smartcopy(text=None):
@@ -361,7 +415,7 @@ def remove(substring, replacement=None, text=None):
 
 # Authorizes the user to access Google Docs
 # CITATION: Google Docs API quickstart
-def _getservice(DOCUMENT_ID, SCOPES=None):
+def _getservice(DOCUMENT_ID):
     """Credentials testing
 
     Gets permissions to access the Google Docs API for a given Google Doc.
@@ -377,12 +431,8 @@ def _getservice(DOCUMENT_ID, SCOPES=None):
 
     creds = None
 
-    if SCOPES is None:
-        # If modifying these scopes, delete the file token.json.
-        SCOPES = ['https://www.googleapis.com/auth/documents']
-    else:
-        if os.path.exists('../token.json'):
-            os.remove('../token.json')
+    SCOPES = ['https://www.googleapis.com/auth/documents', 'https://www.googleapis.com/auth/script.deployments',
+              'https://www.googleapis.com/auth/script.projects']
 
     # The file token.json stores the user's access and refresh tokens.
     # Created automatically when the authorization flow completes for the first time.
@@ -401,12 +451,119 @@ def _getservice(DOCUMENT_ID, SCOPES=None):
 
     # Create + return "service", which you can use to access the Docs API
     try:
-        service = googleapiclient.discovery.build('docs', 'v1', credentials=creds)
+        docservice = googleapiclient.discovery.build('docs', 'v1', credentials=creds)
+        scriptservice = googleapiclient.discovery.build('script', 'v1', credentials=creds)
+        
     except HttpError as err:
         print(err)
         return
 
-    return service
+    return docservice, scriptservice
+
+
+def _makescript(docID):
+    # authenticate so that you can access the google doc
+    docservice, service = _getservice(docID)
+
+    # premade stuff
+    scriptID = ""
+    
+   # make a project
+    request = {
+        "title": 'PrettyCopy',
+        "parentId": docID
+    }
+    try:
+        response = service.projects().create(body=request).execute()
+        scriptID = response['scriptId']
+    except HttpError as e:
+        # The API encountered a problem.
+        print('Error response status code : {0}, reason : {1}'.format(e.status_code, e.error_details))
+        return
+    
+    # add the betterbullets function to it
+    BB_CODE = '''
+    function betterbullets(text) 
+    {
+    var cursor = DocumentApp.getActiveDocument().getCursor();
+    var body = DocumentApp.getActiveDocument().getBody();
+
+    if (cursor) {
+        var element = cursor.getElement()
+        var offset = cursor.getOffset()
+        var location = body.getChildIndex(element) + offset;
+        for(var i = (text.length - 1); i >= 0; i--){
+          li = body.insertListItem(location, text[i]);
+          li.setGlyphType(DocumentApp.GlyphType.BULLET);
+        }
+        return
+    } else {
+        // DocumentApp.getUi().alert('Cannot find a cursor.');
+        for(var i = (text.length - 1); i >= 0; i--){
+          console.log(i)
+          li = body.appendListItem(text[i]);
+          li.setGlyphType(DocumentApp.GlyphType.BULLET);
+        }
+        return
+    }
+    }
+    '''
+
+    # OLD betterbullets - inserts a single string
+
+    # SAMPLE_CODE = '''
+    # function betterbullets(text) 
+    # {
+    # var cursor = DocumentApp.getActiveDocument().getCursor();
+    # var body = DocumentApp.getActiveDocument().getBody();
+
+    # if (cursor) {
+    #     var element = cursor.getElement()
+    #     var offset = cursor.getOffset()
+    #     var location = body.getChildIndex(element) + offset;
+    #     li = body.insertListItem(location, text);
+    #     li.setGlyphType(DocumentApp.GlyphType.BULLET)
+    #     return
+    # } else {
+    #     // DocumentApp.getUi().alert('Cannot find a cursor.');
+    #     li = body.appendListItem(text);
+    #     li.setGlyphType(DocumentApp.GlyphType.BULLET)
+    #     return
+    # }
+    # }
+    # '''.strip()
+
+    SAMPLE_MANIFEST = '''
+    {
+    "oauthScopes": ["https://www.googleapis.com/auth/documents"],
+    "timeZone": "America/New_York",
+    "exceptionLogging": "CLOUD"
+    }
+    '''.strip()
+
+    try:
+        request = {
+            'files': [{
+                'name': 'bullets',
+                'type': 'SERVER_JS',
+                'source': BB_CODE
+            }, {
+                'name': 'appsscript',
+                'type': 'JSON',
+                'source': SAMPLE_MANIFEST
+            }
+            ]
+        }
+        response = service.projects().updateContent(
+                body = request,
+                scriptId = scriptID
+            ).execute()
+    except HttpError as e:
+        # The API encountered a problem.
+        print('Error response status code : {0}, reason : {1}'.format(e.status_code, e.error_details))
+        return
+    
+    return scriptID
 
 
 def _cleanlines(line):
