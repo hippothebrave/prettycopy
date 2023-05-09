@@ -322,6 +322,37 @@ def smartcopy(text=None):
     pyperclip.copy(text)
     return text
 
+def remove(substring, replacement = None, text = None):
+    """Remove a substring (and optionally replace it) from clipboard contents.
+
+    Removes a substring from a text, optionally replacing it with another substring. 
+    Recopies to the clipboard.
+    Input comes from either an argument or (by default) the clipboard.
+
+    Args:
+        substring (str): A string to be removed or replaced.
+        text (str): Any text; optional, default None.
+
+    Returns:
+        str: Corrected text.
+
+    Warning:
+        Changes contents of the clipboard.
+
+    """
+
+    if text is None:
+        text = pyperclip.paste()
+    if not isinstance(text, str):
+        raise ValueError("PrettyCopy can only take in strings!")
+    
+    if replacement:
+        text = text.replace(substring, replacement)
+    else:
+        text = text.replace(substring, '')
+
+    pyperclip.copy(text)
+    return text
 
 # HIDDEN FUNCTIONS
 

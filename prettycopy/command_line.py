@@ -122,3 +122,23 @@ def smartcopy(text: str = "", output: bool = True):
             print(ret)
     except ValueError:
         print(typer.style("Input should have been a string!", fg="white", bg="red"))
+
+@app.command()
+def remove(substring: str, replacement: str = "", text: str = "", output: bool = True):
+    """
+    Remove all instances of a substring.
+    From the clipboard, or, optionally, --text.
+    """
+    try:
+        if text and replacement:
+            ret = pc.remove(substring, replacement, text)
+        elif text and not replacement:
+            ret = pc.remove(substring, text=text)
+        elif replacement and not text:
+            ret = pc.remove(substring, replacement=replacement)
+        else:
+            ret = pc.remove(substring)
+        if output:
+            print(ret)
+    except ValueError:
+        print(typer.style("Input should have been a string!", fg="white", bg="red"))

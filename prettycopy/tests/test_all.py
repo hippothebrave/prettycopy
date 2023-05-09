@@ -475,12 +475,52 @@ def test_cleanlines():
         ret = pc._cleanlines(line)
         assert ret == "Sentence 3 goes here."
 
-        # newline not within a word
-        line = "Sentence 3 goes \nhere."
+        # space not needed 2
+        b1 = MagicMock()
+        b1.correct = MagicMock()
+        b2 = MagicMock()
+        b2.correct = MagicMock()
+        textblob_mock.side_effect = [b1, b2]
+        b1.correct.side_effect = ["Example"]
+        b2.correct.side_effect = ["sentence"]
+        words_mock.return_value = False
+        line = "Example-\r\nsentence 4 goes here."
         ret = pc._cleanlines(line)
-        assert ret == "Sentence 3 goes here."
+        assert ret == "Example-sentence 4 goes here."
+
+        # newline not within a word
+        line = "Sentence 5 goes \nhere."
+        ret = pc._cleanlines(line)
+        assert ret == "Sentence 5 goes here."
 
         assert True
+
+
+def test_remove():
+    with patch("pyperclip.copy") as copy_mock, patch("pyperclip.paste") as paste_mock:
+        # Bad type
+        paste_mock.return_value = 77
+        with pytest.raises(ValueError):
+            ret = pc.remove('x')
+
+        # Remove from clipboard
+        paste_mock.return_value = "Example text here."
+        ret = pc.remove('x')
+        assert ret == "Eample tet here."
+        assert copy_mock.call_args.args == (ret,)
+
+        # Remove from argument
+        paste_mock.return_value = None
+        ret = pc.remove('e', text="Example text here.")
+        assert ret == "Exampl txt hr."
+        assert copy_mock.call_args.args == (ret,)
+
+        # Replace
+        paste_mock.return_value = "Example text here."
+        ret = pc.remove('x', replacement='s')
+        assert ret == "Esample test here."
+        assert copy_mock.call_args.args == (ret,)
+
 
 
 # TODO: test for prettycopy.betterbullets
@@ -670,3 +710,41 @@ def test_app():
         assert result.exit_code == 0
         assert result.stdout == ''
         assert copy_mock.call_args.args == ("Testing sentence three here.",)
+
+        # remove
+        # clipboard input - remove
+        paste_mock.return_value = "Testing sentence one here."
+        result = runner.invoke(app, ["remove", "one"])
+        assert result.exit_code == 0
+        assert result.stdout == "Testing sentence  here." + '\n'
+        assert copy_mock.call_args.args == ("Testing sentence  here.",)
+        # text input - remove
+        paste_mock.return_value = None
+        result = runner.invoke(app, ["remove", "sen", "--text", "Testing sentence two here."])
+        assert result.exit_code == 0
+        assert result.stdout == "Testing tence two here." + '\n'
+        assert copy_mock.call_args.args == ("Testing tence two here.",)
+        # clipboard input - replace
+        paste_mock.return_value = "Testing sentence three here."
+        result = runner.invoke(app, ["remove", "en", "--replacement", "EN"])
+        assert result.exit_code == 0
+        assert result.stdout == "Testing sENtENce three here." + '\n'
+        assert copy_mock.call_args.args == ("Testing sENtENce three here.",)
+        # text input - replace
+        paste_mock.return_value = None
+        result = runner.invoke(app, ["remove", "four", "--replacement", "twenty", 
+                                     "--text", "Testing sentence four here."])
+        assert result.exit_code == 0
+        assert result.stdout == "Testing sentence twenty here." + '\n'
+        assert copy_mock.call_args.args == ("Testing sentence twenty here.",)
+        # error
+        paste_mock.return_value = 42
+        result = runner.invoke(app, ["remove", "x"])
+        assert result.exit_code == 0
+        assert result.stdout == typer.style("Input should have been a string!", fg="white", bg="red") + '\n'
+        # no-output
+        paste_mock.return_value = "Testing sentence five here."
+        result = runner.invoke(app, ["remove", "here", "--no-output"])
+        assert result.exit_code == 0
+        assert result.stdout == ''
+        assert copy_mock.call_args.args == ("Testing sentence five .",)

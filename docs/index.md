@@ -282,6 +282,30 @@ prettycopy.quote('!')
 # your clipboard content becomes: 
     # "Example text here!"
 ```
+### Miscellaneous 
+
+There are other ways that you might want to edit the text that you copied before pasting it. PrettyCopy can help you here, too!
+
+```{eval-rst}
+.. autofunction:: prettycopy.remove
+```
+
+EXAMPLES:
+
+```{eval-rst}
+.. image:: https://raw.githubusercontent.com/hippothebrave/prettycopy/main/docs/images/remove_pc.gif
+    :width: 700
+    :align: center
+```
+
+```python
+import prettycopy
+# If you have copied the text:
+    # Example text here
+prettycopy.remove('ex')
+# your clipboard content becomes: 
+    # Example tt here
+```
 
 ### Integrations
 
