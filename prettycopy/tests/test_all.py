@@ -522,7 +522,6 @@ def test_remove():
         assert copy_mock.call_args.args == (ret,)
 
 
-
 # TODO: test for prettycopy.betterbullets
 
 
@@ -732,8 +731,9 @@ def test_app():
         assert copy_mock.call_args.args == ("Testing sENtENce three here.",)
         # text input - replace
         paste_mock.return_value = None
-        result = runner.invoke(app, ["remove", "four", "--replacement", "twenty", 
-                                     "--text", "Testing sentence four here."])
+        result = runner.invoke(
+            app, ["remove", "four", "--replacement", "twenty", "--text", "Testing sentence four here."]
+        )
         assert result.exit_code == 0
         assert result.stdout == "Testing sentence twenty here." + '\n'
         assert copy_mock.call_args.args == ("Testing sentence twenty here.",)

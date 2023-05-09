@@ -123,6 +123,7 @@ def smartcopy(text: str = "", output: bool = True):
     except ValueError:
         print(typer.style("Input should have been a string!", fg="white", bg="red"))
 
+
 @app.command()
 def remove(substring: str, replacement: str = "", text: str = "", output: bool = True):
     """
