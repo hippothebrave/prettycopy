@@ -13,6 +13,7 @@ Welcome to PrettyCopy: a beginner-friendly library intended to ensure clean, for
 [![Build Status](https://github.com/hippothebrave/prettycopy/workflows/Build%20Status/badge.svg?branch=main)](https://github.com/hippothebrave/prettycopy/actions?query=workflow%3A%22Build+Status%22)
 [![codecov](https://codecov.io/gh/hippothebrave/prettycopy/branch/main/graph/badge.svg)](https://codecov.io/gh/hippothebrave/prettycopy)
 [![PyPI](https://img.shields.io/pypi/v/prettycopy)](https://pypi.org/project/prettycopy/)
+[![Documentation Status](https://readthedocs.org/projects/prettycopy/badge/?version=latest)](https://prettycopy.readthedocs.io/en/latest/?badge=latest)
 
 ## Overview
 Everybody copies and pastes text. But sometimes, there are formatting issues in the text you're copying--and who wants to spend all their time correcting formatting?
@@ -280,6 +281,30 @@ prettycopy.quote()
 prettycopy.quote('!')
 # your clipboard content becomes: 
     # "Example text here!"
+```
+### Miscellaneous 
+
+There are other ways that you might want to edit the text that you copied before pasting it. PrettyCopy can help you here, too!
+
+```{eval-rst}
+.. autofunction:: prettycopy.remove
+```
+
+EXAMPLES:
+
+```{eval-rst}
+.. image:: https://raw.githubusercontent.com/hippothebrave/prettycopy/main/docs/images/remove_pc.gif
+    :width: 700
+    :align: center
+```
+
+```python
+import prettycopy
+# If you have copied the text:
+    # Example text here
+prettycopy.remove('ex')
+# your clipboard content becomes: 
+    # Example tt here
 ```
 
 ### Integrations

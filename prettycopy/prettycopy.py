@@ -114,7 +114,8 @@ def bullettopar(text=None):
 def simplequote(text=None):
     """Add quotes around clipboard contents.
 
-    Adds quotation marks around a text input. Recopies to the clipboard.
+    Adds quotation marks around a cleaned (via smartcopy()) text input.
+    Recopies to the clipboard.
     Input comes from either an argument or (by default) the clipboard.
 
     Args:
@@ -144,7 +145,8 @@ def simplequote(text=None):
 def quote(end_punctuation=None, text=None):
     """Add quotes (and optional punctuation) around clipboard contents.
 
-    Adds quotation marks and end punctuation to a text. Recopies to the clipboard.
+    Adds quotation marks and end punctuation to a cleaned (via smartcopy()) text.
+    Recopies to the clipboard.
     Input comes from either an argument or (by default) the clipboard.
 
     Args:
@@ -316,6 +318,39 @@ def smartcopy(text=None):
     lines[-1] = _cleanlines(lines[-1])
 
     text = ''.join(lines)
+
+    pyperclip.copy(text)
+    return text
+
+
+def remove(substring, replacement=None, text=None):
+    """Remove a substring (and optionally replace it) from clipboard contents.
+
+    Removes a substring from a text, optionally replacing it with another substring.
+    Recopies to the clipboard.
+    Input comes from either an argument or (by default) the clipboard.
+
+    Args:
+        substring (str): A string to be removed or replaced.
+        text (str): Any text; optional, default None.
+
+    Returns:
+        str: Corrected text.
+
+    Warning:
+        Changes contents of the clipboard.
+
+    """
+
+    if text is None:
+        text = pyperclip.paste()
+    if not isinstance(text, str):
+        raise ValueError("PrettyCopy can only take in strings!")
+
+    if replacement:
+        text = text.replace(substring, replacement)
+    else:
+        text = text.replace(substring, '')
 
     pyperclip.copy(text)
     return text

@@ -6,7 +6,7 @@ A beginner-friendly library for clean, format-friendly copy-pasting.
 [![Build Status](https://github.com/hippothebrave/prettycopy/workflows/Build%20Status/badge.svg?branch=main)](https://github.com/hippothebrave/prettycopy/actions?query=workflow%3A%22Build+Status%22)
 [![codecov](https://codecov.io/gh/hippothebrave/prettycopy/branch/main/graph/badge.svg)](https://codecov.io/gh/hippothebrave/prettycopy)
 [![PyPI](https://img.shields.io/pypi/v/prettycopy)](https://pypi.org/project/prettycopy/)
-[![Documentation](https://img.shields.io/badge/Documentation-ReadTheDocs-informational)](https://prettycopy.readthedocs.io/en/latest/)
+[![Documentation Status](https://readthedocs.org/projects/prettycopy/badge/?version=latest)](https://prettycopy.readthedocs.io/en/latest/?badge=latest)
 
 ## Overview
 Copying and pasting text is one of the most commonly-used functionalities we have on our computers. But sometimes, there are formatting issues in the text you're copying that a simple 'paste without formatting' can't fix.
