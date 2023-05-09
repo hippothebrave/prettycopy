@@ -13,6 +13,7 @@ Welcome to PrettyCopy: a beginner-friendly library intended to ensure clean, for
 [![Build Status](https://github.com/hippothebrave/prettycopy/workflows/Build%20Status/badge.svg?branch=main)](https://github.com/hippothebrave/prettycopy/actions?query=workflow%3A%22Build+Status%22)
 [![codecov](https://codecov.io/gh/hippothebrave/prettycopy/branch/main/graph/badge.svg)](https://codecov.io/gh/hippothebrave/prettycopy)
 [![PyPI](https://img.shields.io/pypi/v/prettycopy)](https://pypi.org/project/prettycopy/)
+[![Documentation Status](https://readthedocs.org/projects/prettycopy/badge/?version=latest)](https://prettycopy.readthedocs.io/en/latest/?badge=latest)
 
 ## Overview
 Everybody copies and pastes text. But sometimes, there are formatting issues in the text you're copying--and who wants to spend all their time correcting formatting?
