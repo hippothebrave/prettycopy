@@ -114,7 +114,8 @@ def bullettopar(text=None):
 def simplequote(text=None):
     """Add quotes around clipboard contents.
 
-    Adds quotation marks around a text input. Recopies to the clipboard.
+    Adds quotation marks around a cleaned (via smartcopy()) text input. 
+    Recopies to the clipboard.
     Input comes from either an argument or (by default) the clipboard.
 
     Args:
@@ -144,7 +145,8 @@ def simplequote(text=None):
 def quote(end_punctuation=None, text=None):
     """Add quotes (and optional punctuation) around clipboard contents.
 
-    Adds quotation marks and end punctuation to a text. Recopies to the clipboard.
+    Adds quotation marks and end punctuation to a cleaned (via smartcopy()) text. 
+    Recopies to the clipboard.
     Input comes from either an argument or (by default) the clipboard.
 
     Args:
