@@ -13,7 +13,7 @@ Copying and pasting text is one of the most commonly-used functionalities we hav
 
 Enter PrettyCopy.
 
-PrettyCopy will help you clean up the text on your clipboard *before* you paste it. Just copy text, run a PrettyCopy function, and you'll be able to paste it with corrections already in place!
+PrettyCopy will help you clean up the text on your clipboard *before* you paste it. Just copy your text, run a PrettyCopy function, and you'll be able to paste it with corrections already in place!
 
 See our documentation [here](https://prettycopy.readthedocs.io/en/latest/).
 
@@ -37,7 +37,7 @@ In the command line, type `prettycopy [function_name] [any_args]`.
 PrettyCopy will print the corrected text, just to show you what your clipboard current contains. 
 Now, as soon as you paste, the text will already be corrected.
 
-If you want, you can add the option `--text "your_text_here"` to the instruction. In this case, PrettyCopy will take your inputted string, correct it, and place it in the clipboard. Remember to add quotation marks around your input string if it contains whitespace. This option can go anywhere as long as the input string is to the right of the --text flag.
+All command-line functions have the `--text [YOUR_STRING]` flag. PrettyCopy will take your inputted string, correct it, and place it in the clipboard. *Remember to add quotation marks around your input string if it contains whitespace!* This option can go anywhere as long as the input string is to the right of the --text flag.
 
 Confused? Type `prettycopy --help` to get a list of possible functions, and `prettycopy [function_name] --help` to get help for any particular function.
 

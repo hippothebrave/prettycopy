@@ -3,6 +3,7 @@ import re
 import string
 from nltk.tokenize import sent_tokenize
 
+
 # HELPER
 def _gettext(text):
     if text is None:
@@ -11,7 +12,9 @@ def _gettext(text):
         raise ValueError("PrettyCopy can only take in strings!")
     return text
 
+
 # REMOVING LINE BREAKS
+
 
 def nolinebreaks(text=None):
     """Remove all line breaks.
@@ -32,6 +35,7 @@ def nolinebreaks(text=None):
     pyperclip.copy(text)
     return text
 
+
 def nobullets(text=None):
     """Take out old line breaks. Replace bullets with line breaks.
 
@@ -51,6 +55,7 @@ def nobullets(text=None):
     text = re.sub(r"\s*•\s*", "\n", text)
     pyperclip.copy(text)
     return text
+
 
 def par(text=None):
     """Remove newlines, replace bullets with spaces.
@@ -75,7 +80,9 @@ def par(text=None):
     pyperclip.copy(text)
     return text
 
+
 # ADD
+
 
 def quote(text=None):
     """Add quotes around clipboard contents if none exist.
@@ -100,10 +107,11 @@ def quote(text=None):
     pyperclip.copy(text)
     return text
 
+
 # TODO: decide what to do w/r/t quotation marks, parentheses, etc.
 def endpunct(end_punct, text=None):
-    """Add a final punctuation mark to the contents. 
-    
+    """Add a final punctuation mark to the contents.
+
     If it ends with a quotation mark, punctuation goes inside the quotation mark.
 
     Args:
@@ -114,7 +122,7 @@ def endpunct(end_punct, text=None):
 
     Warning:
         Changes contents of the clipboard."""
-    
+
     text = _gettext(text)
 
     text = text.strip()
@@ -123,7 +131,7 @@ def endpunct(end_punct, text=None):
         raise ValueError("End punctuation should be a single character.")
     elif end_punct not in string.punctuation:
         raise ValueError("End punctuation should be one of: " + string.punctuation)
-    
+
     if text[-1] in ['"', "'"]:
         text = text[:-1] + end_punct + text[-1]
     else:
@@ -131,6 +139,7 @@ def endpunct(end_punct, text=None):
 
     pyperclip.copy(text)
     return text
+
 
 def punct(punct, bullets=False, text=None):
     """Add a punctuation between every line break OR instead of bullet points.
@@ -143,14 +152,14 @@ def punct(punct, bullets=False, text=None):
 
     Warning:
         Changes contents of the clipboard."""
-    
+
     text = _gettext(text)
-    
+
     if len(punct) != 1:
         raise ValueError("End punctuation should be a single character.")
     elif punct not in string.punctuation:
         raise ValueError("Punctuation should be one of: " + string.punctuation)
-    
+
     if bullets:
         text = nobullets(text)
 
@@ -158,8 +167,10 @@ def punct(punct, bullets=False, text=None):
 
     pyperclip.copy(text)
     return text
-    
+
+
 # GAPS
+
 
 def nogaps(text=None):
     """Removes empty lines.
@@ -180,7 +191,9 @@ def nogaps(text=None):
     pyperclip.copy(text)
     return text
 
+
 # ALTER
+
 
 def replace(substring, replacement=None, text=None):
     """Remove or replace a substring.
@@ -207,11 +220,13 @@ def replace(substring, replacement=None, text=None):
     pyperclip.copy(text)
     return text
 
+
 def case(case=None, text=None):
     """Alter the case of a text.
 
     Args:
-        case (str): "lower" for lowercase; "upper" for uppercase; "title" for title case; "capital" to capitalize first words
+        case (str): What case to change the text to.
+        "lower" for lowercase; "upper" for uppercase; "title" for title case; "capital" to capitalize first words
         text (str): Any text; optional, default None.
 
     Returns:
@@ -226,7 +241,7 @@ def case(case=None, text=None):
 
     if case not in ["lower", "upper", "title", "capital"]:
         return ValueError("Case must be one of ['lower', 'upper', 'title', 'capital'].")
-    
+
     if case == "lower":
         text = text.lower()
     elif case == "upper":

@@ -1,5 +1,4 @@
 import prettycopy.prettycopy as pc
-import prettycopy.basics as basics
 from prettycopy.command_line import app
 
 from unittest.mock import patch, MagicMock
@@ -530,121 +529,120 @@ def test_remove():
 def test_app():
     with patch("pyperclip.copy") as copy_mock, patch("pyperclip.paste") as paste_mock:
         # COPY
-            # no gaps
-                #clipboard input
+        # no gaps
+        # clipboard input
         paste_mock.return_value = "Sent\n\n\nence\r\n\r\n one."
         result = runner.invoke(app, ["copy", "--no-gaps"])
         assert result.exit_code == 0
         assert result.stdout == "Sent\nence\n one." + '\n'
         assert copy_mock.call_args.args == ("Sent\nence\n one.",)
-                #CLI input
+        # CLI input
         paste_mock.return_value = None
         result = runner.invoke(app, ["copy", "--no-gaps", "--text", "Testing\n\nsentence\r\n\r\n two here."])
         assert result.exit_code == 0
         assert result.stdout == "Testing\nsentence\n two here." + '\n'
         assert copy_mock.call_args.args == ("Testing\nsentence\n two here.",)
-        
-            # removing line breaks (w/o no-bullets)
+
+        # removing line breaks (w/o no-bullets)
         paste_mock.return_value = "Testing\nsentence \none."
         result = runner.invoke(app, ["copy", "--no-linebreaks"])
         assert result.exit_code == 0
         assert result.stdout == "Testing sentence one." + "\n"
         assert copy_mock.call_args.args == ("Testing sentence one.",)
-            # removing line breaks (w/ no-bullets)
+        # removing line breaks (w/ no-bullets)
         paste_mock.return_value = "Testing\n•sentence\n• two •here."
         result = runner.invoke(app, ["copy", "--no-linebreaks", "--no-bullets"])
         assert result.exit_code == 0
         assert result.stdout == "Testing sentence two here." + '\n'
         assert copy_mock.call_args.args == ("Testing sentence two here.",)
-            # removing bullets (but not line breaks)
+        # removing bullets (but not line breaks)
         paste_mock.return_value = "•   Te•st• sentence three."
         result = runner.invoke(app, ["copy", "--no-bullets"])
         assert result.exit_code == 0
         assert result.stdout == "Te\nst\nsentence three." + '\n'
         assert copy_mock.call_args.args == ("Te\nst\nsentence three.",)
 
-            # end punct - no quotes
+        # end punct - no quotes
         paste_mock.return_value = "Sentence one"
         result = runner.invoke(app, ["copy", "--end-punct", "!"])
         assert result.exit_code == 0
         assert result.stdout == "Sentence one!" + '\n'
         assert copy_mock.call_args.args == ("Sentence one!",)
-            # end punct - quotes
+        # end punct - quotes
         paste_mock.return_value = "\"Sentence two\""
         result = runner.invoke(app, ["copy", "--end-punct", "!"])
         assert result.exit_code == 0
         assert result.stdout == "\"Sentence two!\"" + '\n'
         assert copy_mock.call_args.args == ("\"Sentence two!\"",)
-            # line punct
+        # line punct
         paste_mock.return_value = "apples\noranges \n pears"
         result = runner.invoke(app, ["copy", "--line-punct", ";"])
         assert result.exit_code == 0
         assert result.stdout == "apples; oranges; pears" + '\n'
         assert copy_mock.call_args.args == ("apples; oranges; pears",)
-            # bullet punct
+        # bullet punct
         paste_mock.return_value = "\n•apples\n    •    oranges\n • pears"
         result = runner.invoke(app, ["copy", "--bullet-punct", ";"])
         assert result.exit_code == 0
         assert result.stdout == "apples; oranges; pears" + '\n'
         assert copy_mock.call_args.args == ("apples; oranges; pears",)
-            # quote
+        # quote
         paste_mock.return_value = "Sentence three"
         result = runner.invoke(app, ["copy", "--quote"])
         assert result.exit_code == 0
         assert result.stdout == "\"Sentence three\"" + '\n'
         assert copy_mock.call_args.args == ("\"Sentence three\"",)
-            # quote + end punct
+        # quote + end punct
         paste_mock.return_value = "Sentence four"
         result = runner.invoke(app, ["copy", "--quote", "--end-punct", ","])
         assert result.exit_code == 0
         assert result.stdout == "\"Sentence four,\"" + '\n'
         assert copy_mock.call_args.args == ("\"Sentence four,\"",)
 
-            # replace
+        # replace
         paste_mock.return_value = "Sentence one."
         result = runner.invoke(app, ["copy", "--replace", "e", "x"])
         assert result.exit_code == 0
         assert result.stdout == "Sxntxncx onx." + '\n'
         assert copy_mock.call_args.args == ("Sxntxncx onx.",)
-            # remove
+        # remove
         paste_mock.return_value = "Sentence two."
         result = runner.invoke(app, ["copy", "--remove", "e"])
         assert result.exit_code == 0
         assert result.stdout == "Sntnc two." + '\n'
         assert copy_mock.call_args.args == ("Sntnc two.",)
-            # case: lower
+        # case: lower
         paste_mock.return_value = "SenTEnCe thREE."
         result = runner.invoke(app, ["copy", "--case", "lower"])
         assert result.exit_code == 0
         assert result.stdout == "sentence three." + '\n'
         assert copy_mock.call_args.args == ("sentence three.",)
-            # case: upper
+        # case: upper
         paste_mock.return_value = "SenTEnCe fOUr."
         result = runner.invoke(app, ["copy", "--case", "upper"])
         assert result.exit_code == 0
         assert result.stdout == "SENTENCE FOUR." + '\n'
         assert copy_mock.call_args.args == ("SENTENCE FOUR.",)
-            # case: title
+        # case: title
         paste_mock.return_value = "SenTEnCe fIvE."
         result = runner.invoke(app, ["copy", "--case", "title"])
         assert result.exit_code == 0
         assert result.stdout == "Sentence Five." + '\n'
         assert copy_mock.call_args.args == ("Sentence Five.",)
-            # case: capital
+        # case: capital
         paste_mock.return_value = "SenTEnCe sIx. hErE it iS."
         result = runner.invoke(app, ["copy", "--case", "capital"])
         assert result.exit_code == 0
         assert result.stdout == "Sentence six. Here it is." + '\n'
         assert copy_mock.call_args.args == ("Sentence six. Here it is.",)
 
-            # no output
+        # no output
         paste_mock.return_value = "Sentence one."
         result = runner.invoke(app, ["copy", "--no-output"])
         assert result.exit_code == 0
         assert result.stdout == ''
         assert copy_mock.call_args.args == ("Sentence one.",)
 
-        
         # no new lines
         # clipboard input
         paste_mock.return_value = "Testing\nsentence one \nhere."

@@ -16,7 +16,7 @@ Welcome to PrettyCopy: a beginner-friendly library intended to ensure clean, for
 [![Documentation Status](https://readthedocs.org/projects/prettycopy/badge/?version=latest)](https://prettycopy.readthedocs.io/en/latest/?badge=latest)
 
 ## Overview
-Everybody copies and pastes text. But sometimes, there are formatting issues in the text you're copying--and who wants to spend all their time correcting formatting?
+Everybody copies and pastes text. But sometimes, you want to change something about the text you just copied. Maybe the text has a line break in the middle of every sentence; maybe there's an extra empty space between every line; maybe you want to change it all into upper case, or add quotes around it, or--
 
 Enter PrettyCopy.
 
@@ -37,11 +37,17 @@ So... how do you use PrettyCopy? It's very simple! You can use PrettyCopy at the
 ### Command Line
 Copy a piece of text.
 
-In the command line, type `prettycopy [function_name] [any_args]`. 
+In the command line, type `prettycopy [function_name] [any_args] [any_flags]`. 
 
 PrettyCopy will print the (corrected) contents of your clipboard.
 
 When you paste, the text will already be corrected!
+
+The main command-line function of PrettyCopy is "copy."
+
+```{eval-rst}
+.. autofunction:: command_line.copy
+```
 
 
 There are also optional *flags.* 

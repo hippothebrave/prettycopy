@@ -24,6 +24,8 @@ Want to help with development? Wonderful! Here's how to begin.
 5. Congrats, you're ready to get started coding!
 
 #### Make changes
+In the prettycopy/ directory, there are several files. `prettycopy.py` contains miscellaneous functions. `basics.py` contains more atomic, "basic" versions of the `prettycopy.py` functions. `command_line.py` contains the functionality allowing PrettyCopy to run on the command line. In the prettycopy/tests/ directory, `test_all.py` contains testing. Documentation is found in the docs/ directory.
+
 Now make your changes.
 
 Create, add to, and run tests to ensure that your changes work as expected and do not break anything. Run tests with the command `make test`, and check if there's any code left untested with the command `make coverage`. All test files should go under the *prettycopy/tests/* directory, and all test functions must begin with the prefix `test_` in order to be recognized.
