@@ -43,18 +43,23 @@ PrettyCopy will print the (corrected) contents of your clipboard.
 
 When you paste, the text will already be corrected!
 
-The main command-line function of PrettyCopy is "copy."
+#### Command Line Function
+
+PrettyCopy has a main command-line function: `copy`. The `copy` function can potentially take in a wide variety of optional flags, which allows it to use and combine the abilities of the other PrettyCopy functions.
 
 ```{eval-rst}
-.. autofunction:: command_line.copy
+.. autofunction:: prettycopy.command_line.copy
 ```
 
+#### Other Functions
 
-There are also optional *flags.* 
+All functions have some optional flags.
 
 `--no-output` will prevent PrettyCopy from copying your clipboard contents to the terminal. (Useful for long inputs.)
 
 `--text "your_text_here"` allows you to use a command-line string (to the right of the flag, encased in quotation marks) instead of your current clipboard contents. Note that *your clipboard contents will still be replaced*! 
+
+#### Help
 
 Confused? Type `prettycopy --help` to get a list of possible functions, and `prettycopy [function_name] --help` to get help for any particular function.
 
