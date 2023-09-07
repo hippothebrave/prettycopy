@@ -28,21 +28,32 @@ def copy(
 
     The input comes from either an argument or (by default) the clipboard.
 
-    Flags (all optional):
+    Args:
         --text "YOUR_STRING": Use a given text instead of the clipboard contents.
+
         --no-output: Prevents the result from being printed to the command line.
+
         --no-gaps: Removes any blank lines.
+
         --no-linebreaks: Removes all line breaks from the text.
+
         --no-bullets: Removes line breaks, and replaces bullet points with line breaks.
+
         --quote: Adds quotation marks to the beginning and end of the text.
+
         --end-punct "PUNCTUATION_MARK": Adds a given punctuation mark to the end of the text.
         If the text is surrounded by quotation marks (' or "), the punctuation mark goes on the inside.
         Often combined with --quote.
+
         --line-punct "PUNCTUATION_MARK": Replaces all line breaks with a given punctuation mark.
+
         --bullet-punct "PUNCTUATION_MARK": Replaces all bullet points with a given punctuation mark.
+
         --replace "TO_BE_REPLACED" "TO_REPLACE": Replaces all instances of the first substring
         with the second.
+
         --remove "SUBSTRING": Removes all instances of the given substring.
+
         --case ["lower"/"upper"/"title"/"capital"]: Changes the text's case to lowercase; uppercase;
         title case; or capitalizes the first letter of every sentence.
 
